@@ -1,13 +1,7 @@
 import type { MouseEvent } from 'react'
 import type { PluginDefaultValue } from '../../../block-selector/types'
 import type { Node } from '../../../types'
-import {
-  cn,
-} from '@langgenius/dify-ui/cn'
-import {
-  Handle,
-  Position,
-} from '@xyflow/react'
+import { cn } from '@langgenius/dify-ui/cn'
 import {
   memo,
   useCallback,
@@ -15,6 +9,10 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+  Handle,
+  Position,
+} from 'reactflow'
 import BlockSelector from '../../../block-selector'
 import {
   useAvailableBlocks,
@@ -90,7 +88,7 @@ export const NodeTargetHandle = memo(({
         type="target"
         position={Position.Left}
         className={cn(
-          'workflow-node-handle z-1 h-4! w-4! rounded-none! border-none! bg-transparent! outline-hidden!',
+          'z-1 h-4! w-4! rounded-none! border-none! bg-transparent! outline-hidden!',
           'after:absolute after:top-1 after:left-1.5 after:h-2 after:w-0.5 after:bg-workflow-link-line-handle',
           'transition-all hover:scale-125',
           data._runningStatus === NodeRunningStatus.Succeeded && 'after:bg-workflow-link-line-success-handle',
@@ -205,7 +203,7 @@ export const NodeSourceHandle = memo(({
       type="source"
       position={Position.Right}
       className={cn(
-        'workflow-node-handle group/handle z-1 h-4! w-4! rounded-none! border-none! bg-transparent! outline-hidden!',
+        'group/handle z-1 h-4! w-4! rounded-none! border-none! bg-transparent! outline-hidden!',
         'after:absolute after:top-1 after:right-1.5 after:h-2 after:w-0.5 after:bg-workflow-link-line-handle',
         'transition-all hover:scale-125',
         data._runningStatus === NodeRunningStatus.Succeeded && 'after:bg-workflow-link-line-success-handle',

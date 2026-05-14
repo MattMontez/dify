@@ -1,8 +1,6 @@
 import type { StartNodeType } from '../../nodes/start/types'
-import {
-  cn,
-} from '@langgenius/dify-ui/cn'
 
+import { cn } from '@langgenius/dify-ui/cn'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@langgenius/dify-ui/tooltip'
 import { RiCloseLine, RiEqualizer2Line } from '@remixicon/react'
 import { debounce } from 'es-toolkit/compat'
@@ -15,11 +13,11 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNodes } from 'reactflow'
 import ActionButton, { ActionButtonState } from '@/app/components/base/action-button'
 import { RefreshCcw01 } from '@/app/components/base/icons/src/vender/line/arrows'
 import { useEdgesInteractionsWithoutSync } from '@/app/components/workflow/hooks/use-edges-interactions-without-sync'
 import { useNodesInteractionsWithoutSync } from '@/app/components/workflow/hooks/use-nodes-interactions-without-sync'
-import { useWorkflowFlowNodes } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { useStore } from '@/app/components/workflow/store'
 import {
   useWorkflowInteractions,
@@ -38,7 +36,7 @@ const DebugAndPreview = () => {
   const { handleNodeCancelRunningStatus } = useNodesInteractionsWithoutSync()
   const { handleEdgeCancelRunningStatus } = useEdgesInteractionsWithoutSync()
   const [expanded, setExpanded] = useState(true)
-  const nodes = useWorkflowFlowNodes<StartNodeType>()
+  const nodes = useNodes<StartNodeType>()
   const selectedNode = nodes.find(node => node.data.selected)
   const startNode = nodes.find(node => node.data.type === BlockEnum.Start)
   const variables = startNode?.data.variables || []

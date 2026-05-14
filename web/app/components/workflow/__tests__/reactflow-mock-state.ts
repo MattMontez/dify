@@ -6,7 +6,7 @@
  *
  * Usage (one line at top of test file):
  * ```ts
- * vi.mock('@xyflow/react', async () =>
+ * vi.mock('reactflow', async () =>
  *   (await import('../../__tests__/reactflow-mock-state')).createReactFlowModuleMock(),
  * )
  * ```
@@ -65,13 +65,14 @@ export function createReactFlowModuleMock() {
 
     useStoreApi: vi.fn(() => ({
       getState: () => ({
-        nodes: rfState.nodes,
+        getNodes: () => rfState.nodes,
         setNodes: rfState.setNodes,
         edges: rfState.edges,
         setEdges: rfState.setEdges,
         transform: rfState.transform,
-        nodeLookup: new Map(),
-        panZoom: null,
+        nodeInternals: new Map(),
+        d3Selection: null,
+        d3Zoom: null,
       }),
       setState: vi.fn(),
       subscribe: vi.fn().mockReturnValue(vi.fn()),
@@ -84,8 +85,8 @@ export function createReactFlowModuleMock() {
       zoomIn: vi.fn(),
       zoomOut: vi.fn(),
       zoomTo: vi.fn(),
-      nodes: rfState.nodes,
-      edges: rfState.edges,
+      getNodes: () => rfState.nodes,
+      getEdges: () => rfState.edges,
       setNodes: rfState.setNodes,
       setEdges: rfState.setEdges,
       getViewport: () => ({ x: 0, y: 0, zoom: 1 }),
@@ -135,6 +136,7 @@ export function createReactFlowModuleMock() {
     getBezierPath: vi.fn().mockReturnValue(['M 0 0', 0, 0]),
     getSmoothStepPath: vi.fn().mockReturnValue(['M 0 0', 0, 0]),
     getStraightPath: vi.fn().mockReturnValue(['M 0 0', 0, 0]),
+    internalsSymbol: Symbol('internals'),
   }
 }
 

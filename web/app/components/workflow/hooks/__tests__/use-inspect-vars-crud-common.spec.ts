@@ -23,7 +23,7 @@ const schemaTypeDefinitions: SchemaTypeDefinition[] = [{
   },
 }]
 
-vi.mock('@xyflow/react', async () =>
+vi.mock('reactflow', async () =>
   (await import('../../__tests__/reactflow-mock-state')).createReactFlowModuleMock())
 
 vi.mock('@/service/use-flow', () => ({

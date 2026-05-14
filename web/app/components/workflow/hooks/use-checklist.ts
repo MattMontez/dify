@@ -5,6 +5,7 @@ import type { KnowledgeRetrievalNodeType } from '../nodes/knowledge-retrieval/ty
 import type { ToolNodeType } from '../nodes/tool/types'
 import type { PluginTriggerNodeType } from '../nodes/trigger-plugin/types'
 import type {
+  CommonEdgeType,
   CommonNodeType,
   Edge,
   ModelConfig,
@@ -25,10 +26,10 @@ import {
   useRef,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useEdges, useStoreApi } from 'reactflow'
 import { useStore as useAppStore } from '@/app/components/app/store'
 import { ModelTypeEnum } from '@/app/components/header/account-setting/model-provider-page/declarations'
 import { useModelList } from '@/app/components/header/account-setting/model-provider-page/hooks'
-import { useWorkflowFlowEdges, useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import useNodes from '@/app/components/workflow/store/workflow/use-nodes'
 import { MAX_TREE_DEPTH } from '@/config'
 import { useGetLanguage } from '@/context/i18n'
@@ -325,7 +326,7 @@ export const useChecklistBeforePublish = () => {
   const { t } = useTranslation()
   const language = useGetLanguage()
   const queryClient = useQueryClient()
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const { nodesMap: nodesExtraData } = useNodesMetaData()
   const { data: strategyProviders } = useStrategyProviders()
   const modelProviders = useProviderContextSelector(s => s.modelProviders)
@@ -377,12 +378,13 @@ export const useChecklistBeforePublish = () => {
 
   const handleCheckBeforePublish = useCallback(async () => {
     const {
-      nodes,
+      getNodes,
       edges,
     } = store.getState()
     const {
       dataSourceList,
     } = workflowStore.getState()
+    const nodes = getNodes()
     const filteredNodes = nodes.filter(node => node.type === CUSTOM_NODE)
     const { validNodes, maxDepth } = getValidTreeNodes(filteredNodes, edges)
 
@@ -558,7 +560,7 @@ export const useChecklistBeforePublish = () => {
 export const useWorkflowRunValidation = () => {
   const { t } = useTranslation()
   const nodes = useNodes()
-  const edges = useWorkflowFlowEdges()
+  const edges = useEdges<CommonEdgeType>()
   const needWarningNodes = useChecklist(nodes, edges)
 
   const validateBeforeRun = useCallback(() => {

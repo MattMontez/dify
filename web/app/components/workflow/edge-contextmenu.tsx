@@ -8,7 +8,7 @@ import {
   useMemo,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWorkflowFlowEdges } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useEdges } from 'reactflow'
 import { useEdgesInteractions, usePanelInteractions } from './hooks'
 import { ShortcutKbd } from './shortcuts/shortcut-kbd'
 import { useStore } from './store'
@@ -18,7 +18,7 @@ const EdgeContextmenu = () => {
   const edgeMenu = useStore(s => s.edgeMenu)
   const { handleEdgeDeleteById } = useEdgesInteractions()
   const { handleEdgeContextmenuCancel } = usePanelInteractions()
-  const edges = useWorkflowFlowEdges()
+  const edges = useEdges()
   const currentEdgeExists = !edgeMenu || edges.some(edge => edge.id === edgeMenu.edgeId)
 
   const anchor = useMemo(() => {

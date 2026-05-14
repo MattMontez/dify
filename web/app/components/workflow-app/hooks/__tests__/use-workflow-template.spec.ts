@@ -55,10 +55,6 @@ describe('useWorkflowTemplate', () => {
         sourceHandle: 'source',
         target: 'llm',
         targetHandle: 'target',
-        data: {
-          sourceType: 'start',
-          targetType: 'llm',
-        },
       },
       {
         id: 'llm-answer',
@@ -66,10 +62,6 @@ describe('useWorkflowTemplate', () => {
         sourceHandle: 'source',
         target: 'answer',
         targetHandle: 'target',
-        data: {
-          sourceType: 'llm',
-          targetType: 'answer',
-        },
       },
     ])
     expect(generateNewNodeCalls).toHaveLength(3)

@@ -1,5 +1,5 @@
 import { act, waitFor } from '@testing-library/react'
-import { useWorkflowFlowEdges } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useEdges } from 'reactflow'
 import { createEdge, createNode } from '../../__tests__/fixtures'
 import { renderWorkflowFlowHook } from '../../__tests__/workflow-test-env'
 import { NodeRunningStatus } from '../../types'
@@ -46,7 +46,7 @@ const createFlowEdges = () => [
 const renderEdgesInteractionsHook = () =>
   renderWorkflowFlowHook(() => ({
     ...useEdgesInteractionsWithoutSync(),
-    edges: useWorkflowFlowEdges(),
+    edges: useEdges(),
   }), {
     nodes: createFlowNodes(),
     edges: createFlowEdges(),
@@ -75,7 +75,7 @@ describe('useEdgesInteractionsWithoutSync', () => {
     const originalData = { ...getEdgeRuntimeState(edges[0]) }
     const { result } = renderWorkflowFlowHook(() => ({
       ...useEdgesInteractionsWithoutSync(),
-      edges: useWorkflowFlowEdges(),
+      edges: useEdges(),
     }), {
       nodes: createFlowNodes(),
       edges,

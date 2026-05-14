@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useWorkflowReactFlow } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useReactFlow } from 'reactflow'
 import { useWorkflowStore } from '../store'
 import {
   getLayoutByELK,
@@ -19,7 +19,7 @@ import {
 export const useWorkflowOrganize = () => {
   const workflowStore = useWorkflowStore()
   const collaborativeWorkflow = useCollaborativeWorkflow()
-  const reactflow = useWorkflowReactFlow()
+  const reactflow = useReactFlow()
   const { getNodesReadOnly } = useNodesReadOnly()
   const { saveStateToHistory } = useWorkflowHistory()
   const { handleSyncWorkflowDraft } = useNodesSyncDraft()

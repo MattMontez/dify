@@ -2,12 +2,9 @@
 
 import type { FC, PointerEvent as ReactPointerEvent } from 'react'
 import type { WorkflowCommentList } from '@/contract/console/workflow-comment'
-import {
-  useViewport,
-} from '@xyflow/react'
 import { memo, useCallback, useMemo, useRef, useState } from 'react'
+import { useReactFlow, useViewport } from 'reactflow'
 import { UserAvatarList } from '@/app/components/base/user-avatar-list'
-import { useWorkflowReactFlow } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { useAppContext } from '@/context/app-context'
 import CommentPreview from './comment-preview'
 
@@ -19,7 +16,7 @@ type CommentIconProps = {
 }
 
 export const CommentIcon: FC<CommentIconProps> = memo(({ comment, onClick, isActive = false, onPositionUpdate }) => {
-  const { flowToScreenPosition, screenToFlowPosition } = useWorkflowReactFlow()
+  const { flowToScreenPosition, screenToFlowPosition } = useReactFlow()
   const viewport = useViewport()
   const { userProfile } = useAppContext()
   const isAuthor = comment.created_by_account?.id === userProfile?.id

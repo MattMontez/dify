@@ -13,7 +13,7 @@ type MockWorkflowStoreState = {
 }
 
 type MockFlowStore = {
-  nodes: Node[]
+  getNodes: () => Node[]
   setNodes: (nodes: Node[]) => void
 }
 
@@ -51,10 +51,10 @@ const createNode = (id: string): Node => ({
   },
 })
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: (): MockFlowStore => ({
-      nodes: mockFlowNodes,
+      getNodes: () => mockFlowNodes,
       setNodes: mockSetNodes,
     }),
   }),

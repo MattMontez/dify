@@ -1,19 +1,17 @@
 import type { TFunction } from 'i18next'
 import type { FC } from 'react'
+import type { Node } from 'reactflow'
 import type { ScheduleTriggerNodeType } from '@/app/components/workflow/nodes/trigger-schedule/types'
 import type { WebhookTriggerNodeType } from '@/app/components/workflow/nodes/trigger-webhook/types'
-import type { Node } from '@/app/components/workflow/types'
-import {
-  Button,
-} from '@langgenius/dify-ui/button'
+import { Button } from '@langgenius/dify-ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@langgenius/dify-ui/tooltip'
 import copy from 'copy-to-clipboard'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useStoreApi } from 'reactflow'
 import { StopCircle } from '@/app/components/base/icons/src/vender/line/mediaAndDevices'
 import BlockIcon from '@/app/components/workflow/block-icon'
 import { useGetToolIcon } from '@/app/components/workflow/hooks/use-tool-icon'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { getNextExecutionTime } from '@/app/components/workflow/nodes/trigger-schedule/utils/execution-time-calculator'
 import { BlockEnum } from '@/app/components/workflow/types'
 import { useStore } from '../store'
@@ -82,7 +80,7 @@ const Listening: FC<ListeningProps> = ({
   message,
 }) => {
   const { t } = useTranslation()
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
 
   // Get the current trigger type and node ID from store
   const listeningTriggerType = useStore(s => s.listeningTriggerType)
@@ -93,7 +91,8 @@ const Listening: FC<ListeningProps> = ({
   const getToolIcon = useGetToolIcon()
 
   // Get the trigger node data to extract icon information
-  const { nodes } = store.getState()
+  const { getNodes } = store.getState()
+  const nodes = getNodes()
   const triggerNode = listeningTriggerNodeId
     ? nodes.find(node => node.id === listeningTriggerNodeId)
     : undefined

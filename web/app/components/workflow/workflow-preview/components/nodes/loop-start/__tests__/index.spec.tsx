@@ -1,8 +1,7 @@
 import { render } from '@testing-library/react'
-import { BlockEnum } from '@/app/components/workflow/types'
 import LoopStartNode from '..'
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   Handle: (props: { id: string, type: string, className?: string }) => (
     <div data-testid="handle" data-handleid={props.id} data-type={props.type} className={props.className} />
   ),
@@ -23,7 +22,7 @@ describe('workflow preview loop-start node', () => {
       xPos: 0,
       yPos: 0,
       dragHandle: undefined,
-      data: { title: '', desc: '', type: BlockEnum.LoopStart },
+      data: {},
     }
 
     const { container } = render(

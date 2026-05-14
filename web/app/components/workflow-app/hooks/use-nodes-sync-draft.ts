@@ -3,20 +3,20 @@ import type { WorkflowDraftFeaturesPayload } from '@/service/workflow'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { produce } from 'immer'
 import { useCallback } from 'react'
+import { useStoreApi } from 'reactflow'
 import { useFeaturesStore } from '@/app/components/base/features/hooks'
 import { collaborationManager } from '@/app/components/workflow/collaboration/core/collaboration-manager'
 import { useSerialAsyncCallback } from '@/app/components/workflow/hooks/use-serial-async-callback'
 import { useNodesReadOnly } from '@/app/components/workflow/hooks/use-workflow'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { useWorkflowStore } from '@/app/components/workflow/store'
 import { API_PREFIX } from '@/config'
-import { parseResponseError, postWithKeepalive } from '@/service/fetch'
+import { postWithKeepalive } from '@/service/fetch'
 import { systemFeaturesQueryOptions } from '@/service/system-features'
 import { syncWorkflowDraft } from '@/service/workflow'
 import { useWorkflowRefreshDraft } from '.'
 
 export const useNodesSyncDraft = () => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
   const featuresStore = useFeaturesStore()
   const { getNodesReadOnly } = useNodesReadOnly()
@@ -28,11 +28,11 @@ export const useNodesSyncDraft = () => {
 
   const getPostParams = useCallback(() => {
     const {
-      nodes,
+      getNodes,
       edges,
       transform,
     } = store.getState()
-    const validNodes = nodes.filter(node => !node.data?._isTempNode)
+    const nodes = getNodes().filter(node => !node.data?._isTempNode)
     const [x, y, zoom] = transform
     const {
       appId,
@@ -46,7 +46,7 @@ export const useNodesSyncDraft = () => {
       return null
 
     const features = featuresStore!.getState().features
-    const producedNodes = produce(validNodes, (draft) => {
+    const producedNodes = produce(nodes, (draft) => {
       draft.forEach((node) => {
         Object.keys(node.data).forEach((key) => {
           if (key.startsWith('_'))
@@ -56,10 +56,9 @@ export const useNodesSyncDraft = () => {
     })
     const producedEdges = produce(edges.filter(edge => !edge.data?._isTemp), (draft) => {
       draft.forEach((edge) => {
-        const data = edge.data as typeof edge.data & Record<string, unknown>
-        Object.keys(data).forEach((key) => {
+        Object.keys(edge.data).forEach((key) => {
           if (key.startsWith('_'))
-            delete data[key]
+            delete edge.data[key]
         })
       })
     })
@@ -155,9 +154,12 @@ export const useNodesSyncDraft = () => {
       callback?.onSuccess?.()
     }
     catch (error: any) {
-      const err = await parseResponseError(error)
-      if (err?.code === 'draft_workflow_not_sync' && !notRefreshWhenSyncError)
-        handleRefreshWorkflowDraft(true)
+      if (error && error.json && !error.bodyUsed) {
+        error.json().then((err: any) => {
+          if (err.code === 'draft_workflow_not_sync' && !notRefreshWhenSyncError)
+            handleRefreshWorkflowDraft(true)
+        })
+      }
       callback?.onError?.()
     }
     finally {

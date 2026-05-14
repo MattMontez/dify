@@ -1,21 +1,18 @@
 import type {
+  CommonNodeType,
   Node,
   ValueSelector,
   VarType,
 } from '@/app/components/workflow/types'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWorkflowFlowNodes, useWorkflowReactFlow, useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useNodes, useReactFlow, useStoreApi } from 'reactflow'
 import { getNodeInfoById, isConversationVar, isENV, isGlobalVar, isRagVariableVar, isSystemVar } from '@/app/components/workflow/nodes/_base/components/variable/utils'
 import {
   VariableLabelInSelect,
 } from '@/app/components/workflow/nodes/_base/components/variable/variable-label'
 import { BlockEnum } from '@/app/components/workflow/types'
-import {
-  getNodeHeight,
-  getNodeWidth,
-  isExceptionVariable,
-} from '@/app/components/workflow/utils'
+import { isExceptionVariable } from '@/app/components/workflow/utils'
 
 type VariableTagProps = {
   valueSelector: ValueSelector
@@ -29,7 +26,7 @@ const VariableTag = ({
   isShort,
   availableNodes,
 }: VariableTagProps) => {
-  const nodes = useWorkflowFlowNodes()
+  const nodes = useNodes<CommonNodeType>()
   const isRagVar = isRagVariableVar(valueSelector)
   const node = useMemo(() => {
     if (isSystemVar(valueSelector)) {
@@ -48,8 +45,8 @@ const VariableTag = ({
   const variableName = isSystemVar(valueSelector) ? valueSelector.slice(0).join('.') : valueSelector.slice(1).join('.')
   const isException = isExceptionVariable(variableName, node?.data.type)
 
-  const reactflow = useWorkflowReactFlow()
-  const store = useWorkflowStoreApi()
+  const reactflow = useReactFlow()
+  const store = useStoreApi()
 
   const handleVariableJump = useCallback(() => {
     const workflowContainer = document.getElementById('workflow-container')
@@ -65,8 +62,8 @@ const VariableTag = ({
     const zoom = transform[2]
     const position = node.position
     setViewport({
-      x: (clientWidth - 400 - getNodeWidth(node) * zoom) / 2 - position!.x * zoom,
-      y: (clientHeight - getNodeHeight(node) * zoom) / 2 - position!.y * zoom,
+      x: (clientWidth - 400 - node.width! * zoom) / 2 - position!.x * zoom,
+      y: (clientHeight - node.height! * zoom) / 2 - position!.y * zoom,
       zoom: transform[2],
     })
   }, [node, reactflow, store])

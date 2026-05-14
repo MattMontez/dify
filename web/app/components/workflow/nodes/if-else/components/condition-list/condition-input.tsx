@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import PromptEditor from '@/app/components/base/prompt-editor'
 import { useStore } from '@/app/components/workflow/store'
 import { BlockEnum } from '@/app/components/workflow/types'
-import { getNodeDimensions } from '@/app/components/workflow/utils/node'
 
 type ConditionInputProps = {
   disabled?: boolean
@@ -37,12 +36,11 @@ const ConditionInput = ({
         show: true,
         variables: nodesOutputVars || [],
         workflowNodesMap: availableNodes.reduce((acc, node) => {
-          const { width, height } = getNodeDimensions(node)
           acc[node.id] = {
             title: node.data.title,
             type: node.data.type,
-            width,
-            height,
+            width: node.width,
+            height: node.height,
             position: node.position,
           }
           if (node.data.type === BlockEnum.Start) {

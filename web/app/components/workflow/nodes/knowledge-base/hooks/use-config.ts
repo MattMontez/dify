@@ -8,8 +8,8 @@ import { produce } from 'immer'
 import {
   useCallback,
 } from 'react'
+import { useStoreApi } from 'reactflow'
 import { useNodeDataUpdate } from '@/app/components/workflow/hooks'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { DEFAULT_WEIGHTED_SCORE, RerankingModeEnum } from '@/models/datasets'
 import {
   ChunkStructureEnum,
@@ -21,18 +21,17 @@ import {
 import { isHighQualitySearchMethod } from '../utils'
 
 export const useConfig = (id: string) => {
-  const store = useWorkflowStoreApi<KnowledgeBaseNodeType>()
+  const store = useStoreApi()
   const { handleNodeDataUpdateWithSyncDraft } = useNodeDataUpdate()
 
   const getNodeData = useCallback(() => {
-    const { nodes } = store.getState()
+    const { getNodes } = store.getState()
+    const nodes = getNodes()
 
     return nodes.find(node => node.id === id)
   }, [store, id])
 
-  const handleNodeDataUpdate = useCallback((data: Partial<Omit<KnowledgeBaseNodeType, 'retrieval_model'>> & {
-    retrieval_model?: Partial<KnowledgeBaseNodeType['retrieval_model']>
-  }) => {
+  const handleNodeDataUpdate = useCallback((data: Partial<KnowledgeBaseNodeType>) => {
     handleNodeDataUpdateWithSyncDraft({
       id,
       data,
@@ -47,7 +46,6 @@ export const useConfig = (id: string) => {
     embeddingModelProvider: string
   }) => {
     return {
-      weight_type: WeightedScoreEnum.Customized,
       vector_setting: {
         vector_weight: DEFAULT_WEIGHTED_SCORE.other.semantic,
         embedding_provider_name: embeddingModelProvider || '',
@@ -73,7 +71,7 @@ export const useConfig = (id: string) => {
       indexing_technique: (chunkStructure === ChunkStructureEnum.parent_child || chunkStructure === ChunkStructureEnum.question_answer) ? IndexMethodEnum.QUALIFIED : indexing_technique,
       retrieval_model: {
         ...retrieval_model,
-        search_method: ((chunkStructure === ChunkStructureEnum.parent_child || chunkStructure === ChunkStructureEnum.question_answer) && (!search_method || !isHighQualitySearchMethod(search_method))) ? RetrievalSearchMethodEnum.keywordSearch : search_method,
+        search_method: ((chunkStructure === ChunkStructureEnum.parent_child || chunkStructure === ChunkStructureEnum.question_answer) && !isHighQualitySearchMethod(search_method)) ? RetrievalSearchMethodEnum.keywordSearch : search_method,
       },
       index_chunk_variable_selector: chunkStructure === chunk_structure ? index_chunk_variable_selector : [],
     })
@@ -190,12 +188,10 @@ export const useConfig = (id: string) => {
           weight_type: WeightedScoreEnum.Customized,
           vector_setting: {
             ...nodeData?.data.retrieval_model.weights?.vector_setting,
-            vector_weight: weightedScore.value[0] ?? DEFAULT_WEIGHTED_SCORE.other.semantic,
-            embedding_provider_name: nodeData?.data.retrieval_model.weights?.vector_setting.embedding_provider_name ?? '',
-            embedding_model_name: nodeData?.data.retrieval_model.weights?.vector_setting.embedding_model_name ?? '',
+            vector_weight: weightedScore.value[0],
           },
           keyword_setting: {
-            keyword_weight: weightedScore.value[1] ?? DEFAULT_WEIGHTED_SCORE.other.keyword,
+            keyword_weight: weightedScore.value[1],
           },
         },
       },

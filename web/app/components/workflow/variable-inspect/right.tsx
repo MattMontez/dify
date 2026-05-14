@@ -1,4 +1,3 @@
-import type { CommonNodeType } from '../types'
 import type { currentVarType } from './panel'
 import type { GenRes } from '@/service/debug'
 import { cn } from '@langgenius/dify-ui/cn'
@@ -42,12 +41,6 @@ type Props = {
   currentNodeVar?: currentVarType
   handleOpenMenu: () => void
   isValueFetching?: boolean
-}
-type PromptNodeData = {
-  type?: BlockEnum
-  prompt_template?: { text?: string } | Array<{ text?: string }>
-  code?: string
-  code_languages?: CodeLanguage
 }
 
 const Right = ({
@@ -108,26 +101,22 @@ const Right = ({
   const { eventEmitter } = useEventEmitterContextContext()
   const { handleNodeSelect } = useNodesInteractions()
   const { node } = useNodeInfo(nodeId)
-  const nodeData = node?.data as CommonNodeType<PromptNodeData> | undefined
-  const { setInputs } = useNodeCrud(nodeId, nodeData as CommonNodeType<PromptNodeData>)
-  const blockType = nodeData?.type
+  const { setInputs } = useNodeCrud(nodeId, node?.data)
+  const blockType = node?.data?.type
   const isCodeBlock = blockType === BlockEnum.Code
-  const canShowPromptGenerator = !!blockType && [BlockEnum.LLM, BlockEnum.Code].includes(blockType)
+  const canShowPromptGenerator = [BlockEnum.LLM, BlockEnum.Code].includes(blockType)
   const currentPrompt = useMemo(() => {
     if (!canShowPromptGenerator)
       return ''
-    if (blockType === BlockEnum.LLM) {
-      return Array.isArray(nodeData?.prompt_template)
-        ? nodeData.prompt_template[0]?.text
-        : nodeData?.prompt_template?.text
-    }
+    if (blockType === BlockEnum.LLM)
+      return node?.data?.prompt_template?.text || node?.data?.prompt_template?.[0].text
 
     // if (blockType === BlockEnum.Agent) {
     //   return node?.data?.agent_parameters?.instruction?.value
     // }
     if (blockType === BlockEnum.Code)
-      return nodeData?.code
-  }, [blockType, canShowPromptGenerator, nodeData])
+      return node?.data?.code
+  }, [canShowPromptGenerator])
 
   const [isShowPromptGenerator, {
     setTrue: doShowPromptGenerator,
@@ -139,10 +128,7 @@ const Right = ({
   }, [doShowPromptGenerator, handleNodeSelect, nodeId])
 
   const handleUpdatePrompt = useCallback((res: GenRes) => {
-    if (!nodeData)
-      return
-
-    const newInputs = produce(nodeData, (draft: any) => {
+    const newInputs = produce(node?.data, (draft: any) => {
       switch (blockType) {
         case BlockEnum.LLM:
           if (draft?.prompt_template) {
@@ -171,7 +157,7 @@ const Right = ({
       payload: res.modified,
     } as any)
     handleHidePromptGenerator()
-  }, [setInputs, blockType, nodeId, nodeData, handleHidePromptGenerator])
+  }, [setInputs, blockType, nodeId, node?.data, handleHidePromptGenerator])
 
   const displaySchemaType = currentNodeVar?.var.schemaType ? (`(${currentNodeVar.var.schemaType})`) : ''
 
@@ -338,7 +324,7 @@ const Right = ({
                 flowId={configsMap?.flowId || ''}
                 nodeId={nodeId}
                 currentCode={currentPrompt}
-                codeLanguages={nodeData?.code_languages || CodeLanguage.python3}
+                codeLanguages={node?.data?.code_languages || CodeLanguage.python3}
                 onFinished={handleUpdatePrompt}
               />
             )

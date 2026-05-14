@@ -2,6 +2,7 @@ import type { AppPublisherPublishParams } from '@/app/components/app/app-publish
 import type { EndNodeType } from '@/app/components/workflow/nodes/end/types'
 import type { StartNodeType } from '@/app/components/workflow/nodes/start/types'
 import type {
+  CommonEdgeType,
   Node,
 } from '@/app/components/workflow/types'
 import { Button } from '@langgenius/dify-ui/button'
@@ -14,6 +15,7 @@ import {
   useMemo,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useEdges } from 'reactflow'
 import AppPublisher from '@/app/components/app/app-publisher'
 import { useStore as useAppStore } from '@/app/components/app/store'
 import { useFeatures } from '@/app/components/base/features/hooks'
@@ -26,7 +28,6 @@ import {
   useNodesSyncDraft,
   // useWorkflowRunValidation,
 } from '@/app/components/workflow/hooks'
-import { useWorkflowFlowEdges } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import {
   useStore,
   useWorkflowStore,
@@ -63,7 +64,7 @@ const FeaturesTrigger = () => {
   const startNode = nodes.find(node => node.data.type === BlockEnum.Start)
   const endNode = nodes.find(node => node.data.type === BlockEnum.End)
   const startVariables = (startNode as Node<StartNodeType>)?.data?.variables
-  const edges = useWorkflowFlowEdges()
+  const edges = useEdges<CommonEdgeType>()
 
   const fileSettings = useFeatures(s => s.features.file)
   const variables = useMemo(() => {

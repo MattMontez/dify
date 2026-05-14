@@ -91,7 +91,7 @@ vi.mock('html-to-image', () => ({
   toSvg: (...args: unknown[]) => mockToSvg(...args),
 }))
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   getNodesBounds: () => ({ x: 0, y: 0, width: 240, height: 120 }),
   useReactFlow: () => ({
     getNodes: () => [{ id: 'node-1' }],

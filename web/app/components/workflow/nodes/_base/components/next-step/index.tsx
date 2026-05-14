@@ -1,16 +1,14 @@
 import type {
   Node,
 } from '../../../../types'
+import { isEqual } from 'es-toolkit/predicate'
+import { memo, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getConnectedEdges,
   getOutgoers,
   useStore,
-} from '@xyflow/react'
-import {
-  isEqual,
-} from 'es-toolkit/predicate'
-import { memo, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+} from 'reactflow'
 import { ErrorHandleTypeEnum } from '@/app/components/workflow/nodes/_base/components/error-handle/types'
 import { hasErrorHandleNode } from '@/app/components/workflow/utils'
 import BlockIcon from '../../../../block-icon'
@@ -38,7 +36,7 @@ const NextStep = ({
     target: edge.target,
     targetHandle: edge.targetHandle,
   })), isEqual)
-  const nodes = useStore(s => s.nodes.map(node => ({
+  const nodes = useStore(s => s.getNodes().map(node => ({
     id: node.id,
     data: node.data,
   })), isEqual)

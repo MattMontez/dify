@@ -1,9 +1,9 @@
 'use client'
 
+import type { FC } from 'react'
 import type {
   Viewport,
-} from '@xyflow/react'
-import type { FC } from 'react'
+} from 'reactflow'
 import type { CursorPosition, OnlineUser } from './collaboration/types/collaboration'
 import type { Shape as HooksStoreShape } from './hooks-store'
 import type { WorkflowSliceShape } from './store/workflow/workflow-slice'
@@ -26,15 +26,6 @@ import {
 import { cn } from '@langgenius/dify-ui/cn'
 import { toast } from '@langgenius/dify-ui/toast'
 import {
-  Background,
-  ReactFlow,
-  ReactFlowProvider,
-  SelectionMode,
-  useEdgesState,
-  useNodesState,
-  useOnViewportChange,
-} from '@xyflow/react'
-import {
   useEventListener,
 } from 'ahooks'
 import { isEqual } from 'es-toolkit/predicate'
@@ -49,7 +40,17 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWorkflowFlowNodes, useWorkflowReactFlow, useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import ReactFlow, {
+  Background,
+  ReactFlowProvider,
+  SelectionMode,
+  useEdgesState,
+  useNodes,
+  useNodesState,
+  useOnViewportChange,
+  useReactFlow,
+  useStoreApi,
+} from 'reactflow'
 import { IS_DEV } from '@/config'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
 import {
@@ -121,7 +122,7 @@ import {
   WorkflowRunningStatus,
 } from './types'
 import { setupScrollToNodeListener } from './utils/node-navigation'
-import '@xyflow/react/dist/style.css'
+import 'reactflow/dist/style.css'
 import './style.css'
 
 const nodeTypes = {
@@ -200,8 +201,8 @@ export const Workflow: FC<WorkflowProps> = memo(({
   const { t } = useTranslation()
   const workflowContainerRef = useRef<HTMLDivElement>(null)
   const workflowStore = useWorkflowStore()
-  const reactflow = useWorkflowReactFlow()
-  const store = useWorkflowStoreApi()
+  const reactflow = useReactFlow()
+  const store = useStoreApi()
   const [isMouseOverCanvas, setIsMouseOverCanvas] = useState(false)
   const [nodes, setNodes] = useNodesState(originalNodes)
   const [edges, setEdges] = useEdgesState(originalEdges)
@@ -261,7 +262,7 @@ export const Workflow: FC<WorkflowProps> = memo(({
     setSyncWorkflowDraftHash,
     setNodes: setNodesInStore,
   } = workflowStore.getState()
-  const currentNodes = useWorkflowFlowNodes()
+  const currentNodes = useNodes()
   const setNodesOnlyChangeWithData = useCallback((nodes: Node[]) => {
     const nodesData = nodes.map(node => ({
       id: node.id,
@@ -760,7 +761,6 @@ export const Workflow: FC<WorkflowProps> = memo(({
         nodesConnectable={!nodesReadOnly}
         nodesFocusable={!nodesReadOnly}
         edgesFocusable={!nodesReadOnly}
-        edgesReconnectable={!nodesReadOnly}
         panOnScroll={controlMode === ControlMode.Pointer && !workflowReadOnly}
         panOnDrag={controlMode === ControlMode.Hand || [1]}
         zoomOnPinch={true}

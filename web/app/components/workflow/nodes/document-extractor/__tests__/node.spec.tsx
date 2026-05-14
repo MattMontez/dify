@@ -1,14 +1,11 @@
 import type { DocExtractorNodeType } from '../types'
-import {
-  render,
-  screen,
-} from '@testing-library/react'
-import { useNodes } from '@xyflow/react'
+import { render, screen } from '@testing-library/react'
+import { useNodes } from 'reactflow'
 import { BlockEnum } from '@/app/components/workflow/types'
 import Node from '../node'
 
-vi.mock('@xyflow/react', async () => {
-  const actual = await vi.importActual<typeof import('@xyflow/react')>('@xyflow/react')
+vi.mock('reactflow', async () => {
+  const actual = await vi.importActual<typeof import('reactflow')>('reactflow')
   return {
     ...actual,
     useNodes: vi.fn(),
@@ -46,11 +43,10 @@ describe('document-extractor/node', () => {
         id: 'node-1',
         data: {
           title: 'Input Files',
-          desc: '',
           type: BlockEnum.Start,
         },
       },
-    ] as unknown as ReturnType<typeof useNodes>)
+    ] as ReturnType<typeof useNodes>)
   })
 
   it('renders nothing when no input variable is configured', () => {

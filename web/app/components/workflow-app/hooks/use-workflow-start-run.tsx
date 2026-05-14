@@ -1,9 +1,8 @@
-import type { StartNodeType } from '@/app/components/workflow/nodes/start/types'
 import { useCallback } from 'react'
+import { useStoreApi } from 'reactflow'
 import { useFeaturesStore } from '@/app/components/base/features/hooks'
 import { TriggerType } from '@/app/components/workflow/header/test-run-menu'
 import { useWorkflowInteractions } from '@/app/components/workflow/hooks'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { useWorkflowStore } from '@/app/components/workflow/store'
 import {
   BlockEnum,
@@ -16,7 +15,7 @@ import {
 } from '.'
 
 export const useWorkflowStartRun = () => {
-  const store = useWorkflowStoreApi<StartNodeType>()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
   const featuresStore = useFeaturesStore()
   const isChatMode = useIsChatMode()
@@ -32,7 +31,8 @@ export const useWorkflowStartRun = () => {
     if (workflowRunningData?.result.status === WorkflowRunningStatus.Running)
       return
 
-    const { nodes } = store.getState()
+    const { getNodes } = store.getState()
+    const nodes = getNodes()
     const startNode = nodes.find(node => node.data.type === BlockEnum.Start)
     const startVariables = startNode?.data.variables || []
     const fileSettings = featuresStore!.getState().features.file
@@ -84,7 +84,8 @@ export const useWorkflowStartRun = () => {
     if (workflowRunningData?.result.status === WorkflowRunningStatus.Running)
       return
 
-    const { nodes } = store.getState()
+    const { getNodes } = store.getState()
+    const nodes = getNodes()
     const scheduleNode = nodes.find(node => node.id === nodeId && node.data.type === BlockEnum.TriggerSchedule)
 
     if (!scheduleNode) {
@@ -138,7 +139,8 @@ export const useWorkflowStartRun = () => {
     if (workflowRunningData?.result.status === WorkflowRunningStatus.Running)
       return
 
-    const { nodes } = store.getState()
+    const { getNodes } = store.getState()
+    const nodes = getNodes()
     const webhookNode = nodes.find(node => node.id === nodeId && node.data.type === BlockEnum.TriggerWebhook)
 
     if (!webhookNode) {
@@ -188,7 +190,8 @@ export const useWorkflowStartRun = () => {
     if (workflowRunningData?.result.status === WorkflowRunningStatus.Running)
       return
 
-    const { nodes } = store.getState()
+    const { getNodes } = store.getState()
+    const nodes = getNodes()
     const pluginNode = nodes.find(node => node.id === nodeId && node.data.type === BlockEnum.TriggerPlugin)
 
     if (!pluginNode) {

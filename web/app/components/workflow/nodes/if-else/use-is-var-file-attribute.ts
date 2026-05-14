@@ -1,6 +1,6 @@
 import type { ValueSelector } from '../../types'
 import { useMemo } from 'react'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useStoreApi } from 'reactflow'
 import { useIsChatMode, useWorkflow, useWorkflowVariables } from '../../hooks'
 import { VarType } from '../../types'
 
@@ -15,14 +15,14 @@ const useIsVarFileAttribute = ({
   isInLoop,
 }: Params) => {
   const isChatMode = useIsChatMode()
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const { getBeforeNodesInSameBranch } = useWorkflow()
   const {
-    nodes,
+    getNodes,
   } = store.getState()
-  const currentNode = nodes.find(n => n.id === nodeId)
-  const iterationNode = isInIteration ? nodes.find(n => n.id === currentNode!.parentId) : null
-  const loopNode = isInLoop ? nodes.find(n => n.id === currentNode!.parentId) : null
+  const currentNode = getNodes().find(n => n.id === nodeId)
+  const iterationNode = isInIteration ? getNodes().find(n => n.id === currentNode!.parentId) : null
+  const loopNode = isInLoop ? getNodes().find(n => n.id === currentNode!.parentId) : null
   const availableNodes = useMemo(() => {
     return getBeforeNodesInSameBranch(nodeId)
   }, [getBeforeNodesInSameBranch, nodeId])

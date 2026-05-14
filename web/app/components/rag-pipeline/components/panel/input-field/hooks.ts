@@ -1,10 +1,5 @@
-import { useStore as useReactflow,
-} from '@xyflow/react'
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useStore as useReactflow } from 'reactflow'
 import { useShallow } from 'zustand/react/shallow'
 import { useStore } from '@/app/components/workflow/store'
 
@@ -15,7 +10,7 @@ export const useFloatingRight = (targetElementWidth: number) => {
   const otherPanelWidth = useStore(state => state.otherPanelWidth)
 
   const selectedNodeId = useReactflow(useShallow((s) => {
-    const { nodes } = s
+    const nodes = s.getNodes()
     const currentNode = nodes.find(node => node.data.selected)
 
     if (currentNode)

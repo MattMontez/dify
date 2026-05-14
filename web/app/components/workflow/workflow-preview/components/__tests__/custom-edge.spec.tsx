@@ -1,13 +1,9 @@
-import {
-  render,
-  screen,
-} from '@testing-library/react'
-import { Position,
-} from '@xyflow/react'
+import { render, screen } from '@testing-library/react'
+import { Position } from 'reactflow'
 import { NodeRunningStatus } from '@/app/components/workflow/types'
 import CustomEdge from '../custom-edge'
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   BaseEdge: (props: {
     id: string
     path: string

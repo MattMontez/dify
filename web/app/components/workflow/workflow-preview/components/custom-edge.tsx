@@ -1,14 +1,13 @@
-import type { EdgeProps } from '@xyflow/react'
-import type { Edge } from '@/app/components/workflow/types'
-import {
-  BaseEdge,
-  getBezierPath,
-  Position,
-} from '@xyflow/react'
+import type { EdgeProps } from 'reactflow'
 import {
   memo,
   useMemo,
 } from 'react'
+import {
+  BaseEdge,
+  getBezierPath,
+  Position,
+} from 'reactflow'
 import CustomEdgeLinearGradientRender from '@/app/components/workflow/custom-edge-linear-gradient-render'
 import { ErrorHandleTypeEnum } from '@/app/components/workflow/nodes/_base/components/error-handle/types'
 import { NodeRunningStatus } from '@/app/components/workflow/types'
@@ -23,7 +22,7 @@ const CustomEdge = ({
   targetX,
   targetY,
   selected,
-}: EdgeProps<Edge>) => {
+}: EdgeProps) => {
   const [
     edgePath,
   ] = getBezierPath({

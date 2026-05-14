@@ -11,18 +11,18 @@ const runtimeState = vi.hoisted(() => ({
   nodes: [] as Array<{ data: { type?: BlockEnum } }>,
 }))
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => ({
-      nodes: runtimeState.nodes,
+      getNodes: () => runtimeState.nodes,
     }),
   }),
 }))
 
 vi.mock('@/app/components/app/store', () => ({
-  useStore: (selector: (state: { appDetail: { workflow_kind?: string } }) => unknown) => selector({
+  useStore: (selector: (state: { appDetail: { type?: string } }) => unknown) => selector({
     appDetail: {
-      workflow_kind: runtimeState.appType,
+      type: runtimeState.appType,
     },
   }),
 }))

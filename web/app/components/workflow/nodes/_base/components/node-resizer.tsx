@@ -1,14 +1,11 @@
-import type { OnResize } from '@xyflow/react'
+import type { OnResize } from 'reactflow'
 import type { CommonNodeType } from '../../../types'
-import {
-  cn,
-} from '@langgenius/dify-ui/cn'
-import { NodeResizeControl,
-} from '@xyflow/react'
+import { cn } from '@langgenius/dify-ui/cn'
 import {
   memo,
   useCallback,
 } from 'react'
+import { NodeResizeControl } from 'reactflow'
 import { useNodesInteractions } from '../../../hooks'
 
 const Icon = () => {

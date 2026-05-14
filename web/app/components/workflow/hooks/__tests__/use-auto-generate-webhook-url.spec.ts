@@ -1,13 +1,10 @@
 import type { Node } from '../../types'
-import {
-  act,
-  waitFor,
-} from '@testing-library/react'
+import { act, waitFor } from '@testing-library/react'
+import { useNodes } from 'reactflow'
 import { createNode } from '../../__tests__/fixtures'
 import { renderWorkflowFlowHook } from '../../__tests__/workflow-test-env'
 import { BlockEnum } from '../../types'
 import { useAutoGenerateWebhookUrl } from '../use-auto-generate-webhook-url'
-import { useWorkflowFlowNodes } from '../use-workflow-reactflow'
 
 type WebhookFlowNode = Node & {
   data: NonNullable<Node['data']> & {
@@ -40,7 +37,7 @@ describe('useAutoGenerateWebhookUrl', () => {
   const renderAutoGenerateWebhookUrlHook = () =>
     renderWorkflowFlowHook(() => ({
       autoGenerateWebhookUrl: useAutoGenerateWebhookUrl(),
-      nodes: useWorkflowFlowNodes<WebhookFlowNode['data']>(),
+      nodes: useNodes<WebhookFlowNode>(),
     }), {
       nodes: createFlowNodes(),
       edges: [],

@@ -1,5 +1,4 @@
-import type { ReactFlowInstance } from '@xyflow/react'
-import type { Edge, Node } from '../../types'
+import type { ReactFlowInstance } from 'reactflow'
 import type {
   CollaborationState,
   CursorPosition,
@@ -21,7 +20,6 @@ type CollaborationViewState = {
 }
 
 type ReactFlowStore = NonNullable<Parameters<typeof collaborationManager.connect>[1]>
-type WorkflowReactFlowInstance = ReactFlowInstance<Node, Edge>
 
 const initialState: CollaborationViewState = {
   isConnected: false,
@@ -125,7 +123,7 @@ export function useCollaboration(appId: string, reactFlowStore?: ReactFlowStore)
     prevIsConnected.current = state.isConnected || false
   }, [state.isConnected])
 
-  const startCursorTracking = (containerRef: React.RefObject<HTMLElement>, reactFlowInstance?: WorkflowReactFlowInstance) => {
+  const startCursorTracking = (containerRef: React.RefObject<HTMLElement>, reactFlowInstance?: ReactFlowInstance) => {
     if (!isCollaborationEnabled || !cursorServiceRef.current)
       return
 

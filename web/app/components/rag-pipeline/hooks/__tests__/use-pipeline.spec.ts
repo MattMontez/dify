@@ -7,10 +7,10 @@ const mockGetNodes = vi.fn()
 const mockSetNodes = vi.fn()
 const mockEdges: Array<{ id: string, source: string, target: string }> = []
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => ({
-      nodes: mockGetNodes(),
+      getNodes: mockGetNodes,
       setNodes: mockSetNodes,
       edges: mockEdges,
     }),

@@ -10,7 +10,7 @@ import {
   useMemo,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWorkflowFlowNodes } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useNodes } from 'reactflow'
 import { isSystemVar } from '@/app/components/workflow/nodes/_base/components/variable/utils'
 import {
   VariableLabelInNode,
@@ -44,7 +44,7 @@ const NodeGroupItem = ({
   const { t } = useTranslation()
   const enteringNodePayload = useStore(s => s.enteringNodePayload)
   const hoveringAssignVariableGroupId = useStore(s => s.hoveringAssignVariableGroupId)
-  const nodes: Node[] = useWorkflowFlowNodes()
+  const nodes: Node[] = useNodes()
   const {
     handleGroupItemMouseEnter,
     handleGroupItemMouseLeave,

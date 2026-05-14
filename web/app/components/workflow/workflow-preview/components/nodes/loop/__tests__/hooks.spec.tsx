@@ -7,10 +7,10 @@ import { useNodeLoopInteractions } from '../hooks'
 const mockGetNodes = vi.hoisted(() => vi.fn())
 const mockSetNodes = vi.hoisted(() => vi.fn())
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => ({
-      nodes: mockGetNodes(),
+      getNodes: mockGetNodes,
       setNodes: mockSetNodes,
     }),
   }),

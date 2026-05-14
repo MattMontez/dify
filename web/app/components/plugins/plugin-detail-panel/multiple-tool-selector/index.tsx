@@ -1,5 +1,6 @@
+import type { Node } from 'reactflow'
 import type { ToolValue } from '@/app/components/workflow/block-selector/types'
-import type { Node, NodeOutPutVar } from '@/app/components/workflow/types'
+import type { NodeOutPutVar } from '@/app/components/workflow/types'
 import { cn } from '@langgenius/dify-ui/cn'
 import {
   RiAddLine,

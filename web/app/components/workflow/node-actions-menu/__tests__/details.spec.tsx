@@ -96,16 +96,7 @@ function renderDropdownContent({
     </DropdownMenu>,
     {
       nodes: [],
-      edges: [{
-        id: 'edge-1',
-        source: 'node-0',
-        target: 'node-1',
-        sourceHandle: 'branch-a',
-        data: {
-          sourceType: BlockEnum.IfElse,
-          targetType: BlockEnum.Code,
-        },
-      }],
+      edges: [{ id: 'edge-1', source: 'node-0', target: 'node-1', sourceHandle: 'branch-a' }],
     },
   )
 }

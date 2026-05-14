@@ -1,11 +1,10 @@
 import type {
   EdgeMouseHandler,
   OnEdgesChange,
-} from '@xyflow/react'
-import type { Edge } from '../types'
+} from 'reactflow'
 import { produce } from 'immer'
 import { useCallback } from 'react'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useStoreApi } from 'reactflow'
 import { useWorkflowStore } from '../store'
 import { useCollaborativeWorkflow } from './use-collaborative-workflow'
 import {
@@ -21,7 +20,7 @@ import { useNodesReadOnly } from './use-workflow'
 import { useWorkflowHistory, WorkflowHistoryEvent } from './use-workflow-history'
 
 export const useEdgesInteractions = () => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const { handleSyncWorkflowDraft } = useNodesSyncDraft()
   const { getNodesReadOnly } = useNodesReadOnly()
   const { saveStateToHistory } = useWorkflowHistory()
@@ -52,7 +51,7 @@ export const useEdgesInteractions = () => {
     saveStateToHistory(WorkflowHistoryEvent.EdgeDelete)
   }, [collaborativeWorkflow, workflowStore, handleSyncWorkflowDraft, saveStateToHistory])
 
-  const handleEdgeEnter = useCallback<EdgeMouseHandler<Edge>>((_, edge) => {
+  const handleEdgeEnter = useCallback<EdgeMouseHandler>((_, edge) => {
     if (getNodesReadOnly())
       return
 
@@ -60,7 +59,7 @@ export const useEdgesInteractions = () => {
     setEdges(updateEdgeHoverState(edges, edge.id, true))
   }, [getNodesReadOnly, store])
 
-  const handleEdgeLeave = useCallback<EdgeMouseHandler<Edge>>((_, edge) => {
+  const handleEdgeLeave = useCallback<EdgeMouseHandler>((_, edge) => {
     if (getNodesReadOnly())
       return
 
@@ -121,7 +120,7 @@ export const useEdgesInteractions = () => {
     deleteEdgeById(edgeId)
   }, [deleteEdgeById, getNodesReadOnly])
 
-  const handleEdgesChange = useCallback<OnEdgesChange<Edge>>((changes) => {
+  const handleEdgesChange = useCallback<OnEdgesChange>((changes) => {
     if (getNodesReadOnly())
       return
 
@@ -176,7 +175,7 @@ export const useEdgesInteractions = () => {
     saveStateToHistory(WorkflowHistoryEvent.EdgeSourceHandleChange)
   }, [getNodesReadOnly, collaborativeWorkflow, workflowStore, handleSyncWorkflowDraft, saveStateToHistory])
 
-  const handleEdgeContextMenu = useCallback<EdgeMouseHandler<Edge>>((e, edge) => {
+  const handleEdgeContextMenu = useCallback<EdgeMouseHandler>((e, edge) => {
     if (getNodesReadOnly())
       return
 

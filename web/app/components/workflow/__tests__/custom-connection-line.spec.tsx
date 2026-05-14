@@ -1,8 +1,6 @@
 import type { ComponentProps } from 'react'
-import {
-  render,
-} from '@testing-library/react'
-import { getBezierPath, Position } from '@xyflow/react'
+import { render } from '@testing-library/react'
+import { getBezierPath, Position } from 'reactflow'
 import CustomConnectionLine from '../custom-connection-line'
 
 const createConnectionLineProps = (

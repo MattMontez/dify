@@ -112,13 +112,13 @@ const BaseNode: FC<BaseNodeProps> = ({
   useNodeResizeObserver({
     enabled: Boolean(data.selected && data.isInIteration),
     nodeRef,
-    onResize: size => handleNodeIterationChildSizeChange(id, size),
+    onResize: () => handleNodeIterationChildSizeChange(id),
   })
 
   useNodeResizeObserver({
     enabled: Boolean(data.selected && data.isInLoop),
     nodeRef,
-    onResize: size => handleNodeLoopChildSizeChange(id, size),
+    onResize: () => handleNodeLoopChildSizeChange(id),
   })
 
   const { hasNodeInspectVars } = useInspectVarsCrud()

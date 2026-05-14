@@ -18,8 +18,8 @@ vi.mock('uuid', () => ({
   ...createUuidModuleMock(mockUuid),
 }))
 
-vi.mock('@xyflow/react', async () => {
-  const actual = await vi.importActual<typeof import('@xyflow/react')>('@xyflow/react')
+vi.mock('reactflow', async () => {
+  const actual = await vi.importActual<typeof import('reactflow')>('reactflow')
   return {
     ...actual,
     useUpdateNodeInternals: () => mockUpdateNodeInternals,

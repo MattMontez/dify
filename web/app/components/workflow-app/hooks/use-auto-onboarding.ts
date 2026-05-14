@@ -1,13 +1,13 @@
 import { useCallback, useEffect } from 'react'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useStoreApi } from 'reactflow'
 import { useWorkflowStore } from '@/app/components/workflow/store'
 
 export const useAutoOnboarding = () => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
 
   const checkAndShowOnboarding = useCallback(() => {
-    const { nodes } = store.getState()
+    const { getNodes } = store.getState()
     const {
       showOnboarding,
       hasShownOnboarding,
@@ -20,6 +20,8 @@ export const useAutoOnboarding = () => {
     // Skip if already showing onboarding or it's the initial workflow creation
     if (showOnboarding || notInitialWorkflow)
       return
+
+    const nodes = getNodes()
 
     // Check if canvas is completely empty (no nodes at all)
     // Only trigger onboarding when canvas is completely blank to avoid data loss

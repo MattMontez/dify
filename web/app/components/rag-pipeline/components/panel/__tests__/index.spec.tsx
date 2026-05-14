@@ -3,19 +3,19 @@ import { render, screen, waitFor } from '@testing-library/react'
 import * as React from 'react'
 import RagPipelinePanel from '../index'
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useNodes: () => [],
   useStoreApi: () => ({
     getState: () => ({
-      nodes: [],
+      getNodes: () => [],
     }),
   }),
   useReactFlow: () => ({
-    nodes: [],
+    getNodes: () => [],
   }),
   useStore: (selector: (state: Record<string, unknown>) => unknown) => {
     const state = {
-      nodes: [],
+      getNodes: () => [],
     }
     return selector(state)
   },

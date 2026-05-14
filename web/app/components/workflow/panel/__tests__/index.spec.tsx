@@ -74,14 +74,13 @@ class MockResizeObserver {
 let mockNodes: MockNode[] = []
 let mockPanelStoreState: MockPanelStoreState
 
-vi.mock('@xyflow/react', () => ({
-  useNodes: () => mockNodes,
-  useStore: (selector: (state: { nodes: MockNode[] }) => unknown) => selector({
-    nodes: mockNodes,
+vi.mock('reactflow', () => ({
+  useStore: (selector: (state: { getNodes: () => MockNode[] }) => unknown) => selector({
+    getNodes: () => mockNodes,
   }),
   useStoreApi: () => ({
     getState: () => ({
-      nodes: mockNodes,
+      getNodes: () => mockNodes,
       setNodes: vi.fn(),
     }),
   }),

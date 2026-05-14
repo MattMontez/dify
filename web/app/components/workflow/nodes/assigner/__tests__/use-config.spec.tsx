@@ -30,13 +30,13 @@ vi.mock('../hooks', () => ({
   useGetAvailableVars: () => mockGetAvailableVars,
 }))
 
-vi.mock('@xyflow/react', async () => {
-  const actual = await vi.importActual<typeof import('@xyflow/react')>('@xyflow/react')
+vi.mock('reactflow', async () => {
+  const actual = await vi.importActual<typeof import('reactflow')>('reactflow')
   return {
     ...actual,
     useStoreApi: () => ({
       getState: () => ({
-        nodes: [
+        getNodes: () => [
           { id: 'assigner-node', parentId: 'iteration-parent' },
           { id: 'iteration-parent', data: { title: 'Iteration', type: BlockEnum.Iteration } },
         ],

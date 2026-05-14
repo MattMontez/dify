@@ -4,22 +4,16 @@ import type { NodeProps } from '@/app/components/workflow/types'
 import { cn } from '@langgenius/dify-ui/cn'
 import { toast } from '@langgenius/dify-ui/toast'
 import {
-  Background,
-  useNodesInitialized,
-  useViewport,
-} from '@xyflow/react'
-import {
   memo,
   useEffect,
-  useMemo,
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWorkflowFlowNodes } from '../../hooks/use-workflow-reactflow'
 import {
-  getNodeHeight,
-  getNodeWidth,
-} from '../../utils/node'
+  Background,
+  useNodesInitialized,
+  useViewport,
+} from 'reactflow'
 import { IterationStartNodeDumb } from '../iteration-start'
 import AddBlock from './add-block'
 import { useNodeIterationInteractions } from './use-interactions'
@@ -32,22 +26,9 @@ const Node: FC<NodeProps<IterationNodeType>> = ({
 }) => {
   const { zoom } = useViewport()
   const nodesInitialized = useNodesInitialized()
-  const nodes = useWorkflowFlowNodes()
   const { handleNodeIterationRerender } = useNodeIterationInteractions()
   const { t } = useTranslation()
   const [showTips, setShowTips] = useState(data._isShowTips)
-  const childrenLayoutKey = useMemo(() => {
-    return nodes
-      .filter(node => node.parentId === id)
-      .map(node => [
-        node.id,
-        node.position.x,
-        node.position.y,
-        getNodeWidth(node),
-        getNodeHeight(node),
-      ].join(':'))
-      .join('|')
-  }, [nodes, id])
 
   useEffect(() => {
     if (nodesInitialized)
@@ -56,7 +37,7 @@ const Node: FC<NodeProps<IterationNodeType>> = ({
       toast.warning(t(`${i18nPrefix}.answerNodeWarningDesc`, { ns: 'workflow' }))
       setShowTips(false)
     }
-  }, [nodesInitialized, childrenLayoutKey, id, handleNodeIterationRerender, data.is_parallel, showTips, t])
+  }, [nodesInitialized, id, handleNodeIterationRerender, data.is_parallel, showTips, t])
 
   return (
     <div className={cn(

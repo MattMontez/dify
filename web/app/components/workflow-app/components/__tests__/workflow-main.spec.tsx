@@ -91,11 +91,11 @@ vi.mock('@/app/components/workflow/store', () => ({
   }),
 }))
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useReactFlow: () => ({
-    nodes: [],
+    getNodes: () => [],
     setNodes: vi.fn(),
-    edges: [],
+    getEdges: () => [],
     setEdges: vi.fn(),
   }),
 }))

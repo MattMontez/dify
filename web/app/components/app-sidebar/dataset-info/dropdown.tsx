@@ -22,7 +22,6 @@ import { useSelector as useAppContextWithSelector } from '@/context/app-context'
 import { useDatasetDetailContextWithSelector } from '@/context/dataset-detail'
 import { useRouter } from '@/next/navigation'
 import { checkIsUsedInApp, deleteDataset } from '@/service/datasets'
-import { parseResponseError } from '@/service/fetch'
 import { datasetDetailQueryKeyPrefix, useInvalidDatasetList } from '@/service/knowledge/use-dataset'
 import { useInvalid } from '@/service/use-base'
 import { useExportPipelineDSL } from '@/service/use-pipeline'
@@ -35,8 +34,22 @@ type DropDownProps = {
   expand: boolean
 }
 
+type JsonErrorResponse = {
+  json: () => Promise<{ message?: string }>
+}
+
+const isJsonErrorResponse = (error: unknown): error is JsonErrorResponse => {
+  return typeof error === 'object'
+    && error !== null
+    && 'json' in error
+    && typeof error.json === 'function'
+}
+
 const getErrorMessage = async (error: unknown) => {
-  const res = await parseResponseError(error)
+  if (!isJsonErrorResponse(error))
+    return 'Unknown error'
+
+  const res = await error.json()
   return res?.message || 'Unknown error'
 }
 

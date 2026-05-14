@@ -16,7 +16,7 @@ const runtimeState = vi.hoisted(() => ({
   nodesReadOnly: false,
 }))
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   Position: {
     Left: 'left',
     Right: 'right',
@@ -25,7 +25,7 @@ vi.mock('@xyflow/react', () => ({
   },
   useStoreApi: () => ({
     getState: () => ({
-      nodes: runtimeState.nodes,
+      getNodes: () => runtimeState.nodes,
       edges: runtimeState.edges,
       setNodes: mockSetNodes,
     }),

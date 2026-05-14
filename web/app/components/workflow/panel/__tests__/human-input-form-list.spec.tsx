@@ -14,10 +14,10 @@ const mockNodes: Array<{
   }
 }> = []
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => ({
-      nodes: mockNodes,
+      getNodes: () => mockNodes,
     }),
   }),
 }))

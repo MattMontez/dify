@@ -19,7 +19,7 @@ const {
   },
 }))
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useReactFlow: () => ({
     fitView: mockFitView,
     zoomIn: mockZoomIn,

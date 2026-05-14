@@ -18,6 +18,7 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useStoreApi } from 'reactflow'
 import { enrichSubmittedHumanInputFormData } from '@/app/components/base/chat/chat/answer/human-input-content/submitted-utils'
 import {
   getProcessedInputs,
@@ -31,7 +32,6 @@ import {
 import {
   CUSTOM_NODE,
 } from '@/app/components/workflow/constants'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { sseGet } from '@/service/base'
 import { useInvalidAllLastRun } from '@/service/use-workflow'
 import { submitHumanInputForm } from '@/service/workflow'
@@ -76,7 +76,7 @@ export const useChat = (
     setIterTimes,
     setLoopTimes,
   } = workflowStore.getState()
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
 
   const handleResponding = useCallback((isResponding: boolean) => {
     setIsResponding(isResponding)
@@ -673,10 +673,10 @@ export const useChat = (
 
   const getHumanInputNodeData = (nodeID: string) => {
     const {
-      nodes,
+      getNodes,
     } = store.getState()
-    const customNodes = nodes.filter(node => node.type === CUSTOM_NODE)
-    const node = customNodes.find(n => n.id === nodeID)
+    const nodes = getNodes().filter(node => node.type === CUSTOM_NODE)
+    const node = nodes.find(n => n.id === nodeID)
     return node
   }
 

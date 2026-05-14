@@ -8,7 +8,7 @@ import { usePipelineRun } from '../use-pipeline-run'
 
 const mockStoreGetState = vi.fn()
 const mockGetViewport = vi.fn()
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: mockStoreGetState,
   }),
@@ -109,7 +109,7 @@ describe('usePipelineRun', () => {
     document.body.appendChild(mockWorkflowContainer)
 
     mockStoreGetState.mockReturnValue({
-      nodes: mockGetNodes(),
+      getNodes: mockGetNodes,
       setNodes: mockSetNodes,
       edges: [],
     })

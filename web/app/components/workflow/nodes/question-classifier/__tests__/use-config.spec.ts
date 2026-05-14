@@ -20,7 +20,7 @@ vi.mock('@/app/components/workflow/hooks', () => ({
   useWorkflow: vi.fn(),
 }))
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useUpdateNodeInternals: vi.fn(() => vi.fn()),
 }))
 

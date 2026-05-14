@@ -1,11 +1,11 @@
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useStoreApi } from 'reactflow'
 
 const useNodeInfo = (nodeId: string) => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const {
-    nodes,
+    getNodes,
   } = store.getState()
-  const allNodes = nodes
+  const allNodes = getNodes()
   const node = allNodes.find(n => n.id === nodeId)
   const isInIteration = !!node?.data.isInIteration
   const isInLoop = !!node?.data.isInLoop

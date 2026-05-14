@@ -8,10 +8,13 @@ import type {
   VariableAssignerNodeType,
 } from './types'
 import { uniqBy } from 'es-toolkit/compat'
-import { produce } from 'immer'
 
+import { produce } from 'immer'
 import { useCallback } from 'react'
-import { useWorkflowFlowNodes, useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import {
+  useNodes,
+  useStoreApi,
+} from 'reactflow'
 import {
   useIsChatMode,
   useNodeDataUpdate,
@@ -21,12 +24,13 @@ import {
 import { useWorkflowStore } from '../../store'
 
 export const useVariableAssigner = () => {
-  const store = useWorkflowStoreApi<VariableAssignerNodeType>()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
   const { handleNodeDataUpdate } = useNodeDataUpdate()
 
   const handleAssignVariableValueChange = useCallback((nodeId: string, value: ValueSelector, varDetail: Var, groupId?: string) => {
-    const { nodes } = store.getState()
+    const { getNodes } = store.getState()
+    const nodes = getNodes()
     const node: Node<VariableAssignerNodeType> = nodes.find(node => node.id === nodeId)!
 
     let payload
@@ -69,14 +73,14 @@ export const useVariableAssigner = () => {
     varDetail: Var,
   ) => {
     const {
-      nodes,
+      getNodes,
       setNodes,
     } = store.getState()
     const {
       setShowAssignVariablePopup,
     } = workflowStore.getState()
 
-    const newNodes = produce(nodes, (draft) => {
+    const newNodes = produce(getNodes(), (draft) => {
       draft.forEach((node) => {
         if (node.id === nodeId || node.id === variableAssignerNodeId) {
           node.data = {
@@ -119,7 +123,7 @@ export const useVariableAssigner = () => {
 }
 
 export const useGetAvailableVars = () => {
-  const nodes: Node[] = useWorkflowFlowNodes()
+  const nodes: Node[] = useNodes()
   const { getBeforeNodesInSameBranchIncludeParent } = useWorkflow()
   const { getNodeAvailableVars } = useWorkflowVariables()
   const isChatMode = useIsChatMode()

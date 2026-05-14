@@ -1,17 +1,16 @@
 import type { LoopStartedResponse } from '@/types/workflow'
 import { produce } from 'immer'
 import { useCallback } from 'react'
-import { useWorkflowReactFlow, useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import {
+  useReactFlow,
+  useStoreApi,
+} from 'reactflow'
 import { useWorkflowStore } from '@/app/components/workflow/store'
 import { NodeRunningStatus } from '@/app/components/workflow/types'
-import {
-  getNodeHeight,
-  getNodeWidth,
-} from '@/app/components/workflow/utils'
 
 export const useWorkflowNodeLoopStarted = () => {
-  const store = useWorkflowStoreApi()
-  const reactflow = useWorkflowReactFlow()
+  const store = useStoreApi()
+  const reactflow = useReactFlow()
   const workflowStore = useWorkflowStore()
 
   const handleWorkflowNodeLoopStarted = useCallback((
@@ -27,12 +26,13 @@ export const useWorkflowNodeLoopStarted = () => {
       setWorkflowRunningData,
     } = workflowStore.getState()
     const {
-      nodes,
+      getNodes,
       setNodes,
       edges,
       setEdges,
       transform,
     } = store.getState()
+    const nodes = getNodes()
     setWorkflowRunningData(produce(workflowRunningData!, (draft) => {
       draft.tracing!.push({
         ...data,
@@ -50,8 +50,8 @@ export const useWorkflowNodeLoopStarted = () => {
 
     if (!currentNode!.parentId) {
       setViewport({
-        x: (containerParams.clientWidth - 400 - getNodeWidth(currentNode) * zoom) / 2 - position.x * zoom,
-        y: (containerParams.clientHeight - getNodeHeight(currentNode) * zoom) / 2 - position.y * zoom,
+        x: (containerParams.clientWidth - 400 - currentNode!.width! * zoom) / 2 - position.x * zoom,
+        y: (containerParams.clientHeight - currentNode!.height! * zoom) / 2 - position.y * zoom,
         zoom: transform[2],
       })
     }

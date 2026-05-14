@@ -1,4 +1,4 @@
-import type { Viewport } from '@xyflow/react'
+import type { Viewport } from 'reactflow'
 import type { Metadata } from '@/app/components/base/chat/chat/type'
 import type {
   Edge,

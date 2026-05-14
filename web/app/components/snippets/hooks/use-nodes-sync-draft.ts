@@ -3,9 +3,9 @@ import type { SnippetInputField } from '@/models/snippet'
 import type { SnippetDraftSyncPayload, SnippetWorkflow } from '@/types/snippet'
 import { produce } from 'immer'
 import { useCallback } from 'react'
+import { useStoreApi } from 'reactflow'
 import { useSerialAsyncCallback } from '@/app/components/workflow/hooks/use-serial-async-callback'
 import { useNodesReadOnly } from '@/app/components/workflow/hooks/use-workflow'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { useWorkflowStore } from '@/app/components/workflow/store'
 import { API_PREFIX } from '@/config'
 import { consoleClient } from '@/service/client'
@@ -26,7 +26,7 @@ type SyncInputFieldsDraftCallback = SyncDraftCallback & {
 }
 
 export const useNodesSyncDraft = (snippetId: string) => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
   const { getNodesReadOnly } = useNodesReadOnly()
   const { handleRefreshWorkflowDraft } = useSnippetRefreshDraft(snippetId)
@@ -39,11 +39,11 @@ export const useNodesSyncDraft = (snippetId: string) => {
 
   const getDraftSyncPayload = useCallback((inputFields?: SnippetInputField[]) => {
     const {
-      nodes: flowNodes,
+      getNodes,
       edges,
       transform,
     } = store.getState()
-    const nodes = flowNodes.filter(node => !node.data?._isTempNode)
+    const nodes = getNodes().filter(node => !node.data?._isTempNode)
     const [x, y, zoom] = transform
     if (!snippetId)
       return null
@@ -58,10 +58,9 @@ export const useNodesSyncDraft = (snippetId: string) => {
     })
     const producedEdges = produce(edges.filter(edge => !edge.data?._isTemp), (draft) => {
       draft.forEach((edge) => {
-        const data = edge.data as typeof edge.data & Record<string, unknown>
-        Object.keys(data).forEach((key) => {
+        Object.keys(edge.data).forEach((key) => {
           if (key.startsWith('_'))
-            delete data[key]
+            delete edge.data[key]
         })
       })
     })

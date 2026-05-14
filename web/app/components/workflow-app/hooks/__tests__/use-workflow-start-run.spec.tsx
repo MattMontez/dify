@@ -26,10 +26,10 @@ const mockSetHistoryWorkflowData = vi.fn()
 
 let workflowStoreState: Record<string, unknown>
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => ({
-      nodes: mockGetNodes(),
+      getNodes: mockGetNodes,
     }),
   }),
 }))

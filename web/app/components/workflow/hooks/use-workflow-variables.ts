@@ -7,7 +7,7 @@ import type {
 } from '@/app/components/workflow/types'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useStoreApi } from 'reactflow'
 import { getVarType, toNodeAvailableVars } from '@/app/components/workflow/nodes/_base/components/variable/utils'
 import {
   useAllBuiltInTools,
@@ -125,9 +125,9 @@ export const useWorkflowVariables = () => {
 }
 
 export const useWorkflowVariableType = () => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const {
-    nodes,
+    getNodes,
   } = store.getState()
   const { getCurrentVariableType } = useWorkflowVariables()
 
@@ -140,9 +140,9 @@ export const useWorkflowVariableType = () => {
     nodeId: string
     valueSelector: ValueSelector
   }) => {
-    const node = nodes.find(n => n.id === nodeId)
+    const node = getNodes().find(n => n.id === nodeId)
     const isInIteration = !!node?.data.isInIteration
-    const iterationNode = isInIteration ? nodes.find(n => n.id === node.parentId) : null
+    const iterationNode = isInIteration ? getNodes().find(n => n.id === node.parentId) : null
     const availableNodes = [node]
 
     const type = getCurrentVariableType({

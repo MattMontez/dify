@@ -6,7 +6,7 @@ import { useConfig } from '../use-config'
 const mockUseStoreApi = vi.hoisted(() => vi.fn())
 const mockUseNodeDataUpdate = vi.hoisted(() => vi.fn())
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => mockUseStoreApi(),
 }))
 
@@ -42,7 +42,7 @@ describe('data-source/hooks/use-config', () => {
 
     mockUseStoreApi.mockReturnValue({
       getState: () => ({
-        nodes: [currentNode],
+        getNodes: () => [currentNode],
       }),
     })
     mockUseNodeDataUpdate.mockReturnValue({

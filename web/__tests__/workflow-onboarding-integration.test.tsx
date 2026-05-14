@@ -25,7 +25,7 @@ vi.mock('@/app/components/workflow/store')
 
 // Mock ReactFlow store
 const mockGetNodes = vi.fn()
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => ({
       getNodes: mockGetNodes,

@@ -7,8 +7,6 @@ import {
   ContextMenuLabel,
   ContextMenuSeparator,
 } from '@langgenius/dify-ui/context-menu'
-import { useStore as useReactFlowStore,
-} from '@xyflow/react'
 import { produce } from 'immer'
 import {
   memo,
@@ -17,16 +15,13 @@ import {
   useMemo,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useStore as useReactFlowStore } from 'reactflow'
 import { useCollaborativeWorkflow } from '@/app/components/workflow/hooks/use-collaborative-workflow'
 import { useNodesInteractions, useNodesReadOnly, useNodesSyncDraft } from './hooks'
 import { useSelectionInteractions } from './hooks/use-selection-interactions'
 import { useWorkflowHistory, WorkflowHistoryEvent } from './hooks/use-workflow-history'
 import { ShortcutKbd } from './shortcuts/shortcut-kbd'
 import { useStore, useWorkflowStore } from './store'
-import {
-  getNodeHeight,
-  getNodeWidth,
-} from './utils'
 
 const AlignType = {
   Bottom: 'bottom',
@@ -98,13 +93,13 @@ const getAlignableNodes = (nodes: Node[], selectedNodes: Node[]) => {
 }
 
 const getAlignBounds = (nodes: Node[]): AlignBounds | null => {
-  const validNodes = nodes.filter(node => getNodeWidth(node) && getNodeHeight(node))
+  const validNodes = nodes.filter(node => node.width && node.height)
   if (validNodes.length <= 1)
     return null
 
   return validNodes.reduce<AlignBounds>((bounds, node) => {
-    const width = getNodeWidth(node)
-    const height = getNodeHeight(node)
+    const width = node.width!
+    const height = node.height!
 
     return {
       minX: Math.min(bounds.minX, node.position.x),
@@ -126,8 +121,8 @@ const alignNodePosition = (
   alignType: AlignTypeValue,
   bounds: AlignBounds,
 ) => {
-  const width = getNodeWidth(nodeToAlign)
-  const height = getNodeHeight(nodeToAlign)
+  const width = nodeToAlign.width ?? 0
+  const height = nodeToAlign.height ?? 0
 
   switch (alignType) {
     case AlignType.Left:
@@ -187,11 +182,11 @@ const distributeNodes = (
   const lastNode = sortedNodes[sortedNodes.length - 1]
 
   const totalGap = isHorizontal
-    ? lastNode!.position.x + getNodeWidth(lastNode) - firstNode!.position.x
-    : lastNode!.position.y + getNodeHeight(lastNode) - firstNode!.position.y
+    ? lastNode!.position.x + (lastNode!.width || 0) - firstNode!.position.x
+    : lastNode!.position.y + (lastNode!.height || 0) - firstNode!.position.y
 
   const fixedSpace = sortedNodes.reduce((sum, node) =>
-    sum + (isHorizontal ? getNodeWidth(node) : getNodeHeight(node)), 0)
+    sum + (isHorizontal ? (node.width || 0) : (node.height || 0)), 0)
 
   const spacing = (totalGap - fixedSpace) / (sortedNodes.length - 1)
   if (spacing <= 0)
@@ -199,8 +194,8 @@ const distributeNodes = (
 
   return produce(nodes, (draft) => {
     let currentPosition = isHorizontal
-      ? firstNode!.position.x + getNodeWidth(firstNode)
-      : firstNode!.position.y + getNodeHeight(firstNode)
+      ? firstNode!.position.x + (firstNode!.width || 0)
+      : firstNode!.position.y + (firstNode!.height || 0)
 
     for (let index = 1; index < sortedNodes.length - 1; index++) {
       const nodeToAlign = sortedNodes[index]
@@ -213,14 +208,14 @@ const distributeNodes = (
         currentNode.position.x = nextX
         if (currentNode.positionAbsolute)
           currentNode.positionAbsolute.x = nextX
-        currentPosition = nextX + getNodeWidth(nodeToAlign)
+        currentPosition = nextX + (nodeToAlign!.width || 0)
       }
       else {
         const nextY = currentPosition + spacing
         currentNode.position.y = nextY
         if (currentNode.positionAbsolute)
           currentNode.positionAbsolute.y = nextY
-        currentPosition = nextY + getNodeHeight(nodeToAlign)
+        currentPosition = nextY + (nodeToAlign!.height || 0)
       }
     }
   })
@@ -239,7 +234,7 @@ const SelectionContextmenu = () => {
 
   // Get selected nodes for alignment logic
   const selectedNodes = useReactFlowStore(state =>
-    state.nodes.filter(node => node.selected) as Node[],
+    state.getNodes().filter(node => node.selected),
   )
   const { handleSyncWorkflowDraft } = useNodesSyncDraft()
   const { saveStateToHistory } = useWorkflowHistory()
@@ -343,7 +338,7 @@ const SelectionContextmenu = () => {
     }
 
     const newNodes = produce(nodes, (draft) => {
-      const validNodesToAlign = nodesToAlign.filter(node => getNodeWidth(node) && getNodeHeight(node))
+      const validNodesToAlign = nodesToAlign.filter(node => node.width && node.height)
       validNodesToAlign.forEach((nodeToAlign) => {
         const currentNode = draft.find(n => n.id === nodeToAlign.id)
         if (!currentNode)

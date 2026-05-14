@@ -26,7 +26,7 @@ const mockViewHistory = vi.fn()
 let mockNodesReadOnly = false
 let mockTheme: 'light' | 'dark' = 'light'
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useNodes: () => mockUseNodes(),
 }))
 

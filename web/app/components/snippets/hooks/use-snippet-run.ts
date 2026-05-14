@@ -3,8 +3,11 @@ import type { SnippetDraftRunPayload } from '@/types/snippet'
 import type { VersionHistory } from '@/types/workflow'
 import { produce } from 'immer'
 import { useCallback, useRef } from 'react'
+import {
+  useReactFlow,
+  useStoreApi,
+} from 'reactflow'
 import { useSetWorkflowVarsWithValue } from '@/app/components/workflow/hooks/use-fetch-workflow-inspect-vars'
-import { useWorkflowReactFlow, useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { useWorkflowUpdate } from '@/app/components/workflow/hooks/use-workflow-interactions'
 import { useWorkflowRunEvent } from '@/app/components/workflow/hooks/use-workflow-run-event/use-workflow-run-event'
 import { useWorkflowStore } from '@/app/components/workflow/store'
@@ -16,9 +19,9 @@ import { FlowType } from '@/types/common'
 import { useNodesSyncDraft } from './use-nodes-sync-draft'
 
 export const useSnippetRun = (snippetId: string) => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
-  const reactflow = useWorkflowReactFlow()
+  const reactflow = useReactFlow()
   const { doSyncWorkflowDraft } = useNodesSyncDraft(snippetId)
   const { handleUpdateWorkflowCanvas } = useWorkflowUpdate()
 
@@ -44,7 +47,7 @@ export const useSnippetRun = (snippetId: string) => {
 
   const handleBackupDraft = useCallback(() => {
     const {
-      nodes,
+      getNodes,
       edges,
     } = store.getState()
     const { getViewport } = reactflow
@@ -55,7 +58,7 @@ export const useSnippetRun = (snippetId: string) => {
 
     if (!backupDraft) {
       setBackupDraft({
-        nodes,
+        nodes: getNodes(),
         edges,
         viewport: getViewport(),
         environmentVariables: [],
@@ -99,10 +102,10 @@ export const useSnippetRun = (snippetId: string) => {
     callback?: IOtherOptions,
   ) => {
     const {
-      nodes,
+      getNodes,
       setNodes,
     } = store.getState()
-    const newNodes = produce(nodes, (draft) => {
+    const newNodes = produce(getNodes(), (draft) => {
       draft.forEach((node) => {
         node.data.selected = false
         node.data._runningStatus = undefined

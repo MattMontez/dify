@@ -9,17 +9,10 @@ describe('useNodeResizeObserver', () => {
     const observe = vi.fn()
     const disconnect = vi.fn()
     const onResize = vi.fn()
-    const requestAnimationFrame = vi.fn((callback: FrameRequestCallback) => {
-      callback(1)
-      return 1
-    })
-    const cancelAnimationFrame = vi.fn()
-    let resizeCallback: ResizeObserverCallback | undefined
+    let resizeCallback: (() => void) | undefined
 
-    vi.stubGlobal('requestAnimationFrame', requestAnimationFrame)
-    vi.stubGlobal('cancelAnimationFrame', cancelAnimationFrame)
     vi.stubGlobal('ResizeObserver', class {
-      constructor(callback: ResizeObserverCallback) {
+      constructor(callback: () => void) {
         resizeCallback = callback
       }
 
@@ -38,14 +31,8 @@ describe('useNodeResizeObserver', () => {
     }))
 
     expect(observe).toHaveBeenCalledWith(node)
-    resizeCallback?.([
-      {
-        borderBoxSize: [{ inlineSize: 244, blockSize: 184 }],
-        contentRect: { width: 240, height: 180 },
-      } as unknown as ResizeObserverEntry,
-    ], {} as ResizeObserver)
-    expect(requestAnimationFrame).toHaveBeenCalledTimes(1)
-    expect(onResize).toHaveBeenCalledWith({ width: 244, height: 184 })
+    resizeCallback?.()
+    expect(onResize).toHaveBeenCalledTimes(1)
 
     unmount()
     expect(disconnect).toHaveBeenCalledTimes(1)

@@ -1,9 +1,7 @@
 import type { DataSourceNodeType } from '@/app/components/workflow/nodes/data-source/types'
 import type { Node } from '@/app/components/workflow/types'
 import type { InputVar, RAGPipelineVariables } from '@/models/pipeline'
-import {
-  Button,
-} from '@langgenius/dify-ui/button'
+import { Button } from '@langgenius/dify-ui/button'
 import { cn } from '@langgenius/dify-ui/cn'
 import { RiCloseLine, RiEyeLine } from '@remixicon/react'
 import {
@@ -13,11 +11,11 @@ import {
   useRef,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNodes } from 'reactflow'
 import Divider from '@/app/components/base/divider'
 import { Infotip } from '@/app/components/base/infotip'
 import { useInputFieldPanel } from '@/app/components/rag-pipeline/hooks'
 import { useNodesSyncDraft } from '@/app/components/workflow/hooks'
-import { useWorkflowFlowNodes } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import { useStore } from '@/app/components/workflow/store'
 import { BlockEnum } from '@/app/components/workflow/types'
 import FieldList from './field-list'
@@ -27,7 +25,7 @@ import GlobalInputs from './label-right-content/global-inputs'
 
 const InputFieldPanel = () => {
   const { t } = useTranslation()
-  const nodes = useWorkflowFlowNodes<DataSourceNodeType>()
+  const nodes = useNodes<DataSourceNodeType>()
   const {
     closeAllInputFieldPanels,
     toggleInputFieldPreviewPanel,

@@ -4,27 +4,24 @@ import type {
   EdgeChange,
   NodeChange,
   Viewport,
-} from '@xyflow/react'
+} from 'reactflow'
 import type {
   Edge,
   Node,
 } from '@/app/components/workflow/types'
-import {
-  cn,
-} from '@langgenius/dify-ui/cn'
-import {
-  applyEdgeChanges,
-  applyNodeChanges,
-  Background,
-  MiniMap,
-  ReactFlow,
-  ReactFlowProvider,
-  SelectionMode,
-} from '@xyflow/react'
+import { cn } from '@langgenius/dify-ui/cn'
 import {
   useCallback,
   useState,
 } from 'react'
+import ReactFlow, {
+  applyEdgeChanges,
+  applyNodeChanges,
+  Background,
+  MiniMap,
+  ReactFlowProvider,
+  SelectionMode,
+} from 'reactflow'
 import {
   CUSTOM_EDGE,
   CUSTOM_NODE,
@@ -45,7 +42,7 @@ import IterationStartNode from './components/nodes/iteration-start'
 import LoopStartNode from './components/nodes/loop-start'
 import CustomNoteNode from './components/note-node'
 import ZoomInOut from './components/zoom-in-out'
-import '@xyflow/react/dist/style.css'
+import 'reactflow/dist/style.css'
 import '../style.css'
 
 const nodeTypes = {
@@ -77,11 +74,11 @@ const WorkflowPreview = ({
   const [edgesData, setEdgesData] = useState(() => initialEdges(edges, nodes))
 
   const onNodesChange = useCallback(
-    (changes: NodeChange<Node>[]) => setNodesData(nds => applyNodeChanges<Node>(changes, nds)),
+    (changes: NodeChange[]) => setNodesData(nds => applyNodeChanges(changes, nds)),
     [],
   )
   const onEdgesChange = useCallback(
-    (changes: EdgeChange<Edge>[]) => setEdgesData(eds => applyEdgeChanges<Edge>(changes, eds)),
+    (changes: EdgeChange[]) => setEdgesData(eds => applyEdgeChanges(changes, eds)),
     [],
   )
 
@@ -101,14 +98,8 @@ const WorkflowPreview = ({
             width: 102,
             height: 72,
           }}
-          bgColor="var(--color-components-panel-bg)"
           maskColor="var(--color-workflow-minimap-bg)"
-          maskStrokeColor="var(--color-workflow-link-line-active)"
-          maskStrokeWidth={1}
-          nodeColor="var(--color-workflow-minimap-block)"
-          nodeStrokeColor="var(--color-workflow-link-line-normal)"
-          nodeStrokeWidth={3}
-          className={cn('absolute! bottom-14! z-9 m-0! h-[72px]! w-[102px]! rounded-lg! border-[0.5px]! border-divider-subtle! bg-components-panel-bg! shadow-md! shadow-shadow-shadow-5!', miniMapToRight ? 'right-4!' : 'left-4!')}
+          className={cn('absolute! bottom-14! z-9 m-0! h-[72px]! w-[102px]! rounded-lg! border-[0.5px]! border-divider-subtle! bg-background-default-subtle! shadow-md! shadow-shadow-shadow-5!', miniMapToRight ? 'right-4!' : 'left-4!')}
         />
         <div className="absolute bottom-4 left-4 z-9 mt-1 flex items-center gap-2">
           <ZoomInOut />
@@ -130,7 +121,6 @@ const WorkflowPreview = ({
         nodesConnectable={false}
         nodesFocusable={false}
         edgesFocusable={false}
-        edgesReconnectable={false}
         panOnScroll={false}
         selectionKeyCode={null}
         selectionMode={SelectionMode.Partial}

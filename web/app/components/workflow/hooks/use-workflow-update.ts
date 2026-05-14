@@ -1,6 +1,6 @@
 import type { WorkflowDataUpdater } from '../types'
 import { useCallback } from 'react'
-import { useWorkflowReactFlow } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useReactFlow } from 'reactflow'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
 import { WORKFLOW_DATA_UPDATE } from '../constants'
 import {
@@ -9,7 +9,7 @@ import {
 } from '../utils'
 
 export const useWorkflowUpdate = () => {
-  const reactflow = useWorkflowReactFlow()
+  const reactflow = useReactFlow()
   const { eventEmitter } = useEventEmitterContextContext()
 
   const handleUpdateWorkflowCanvas = useCallback((payload: WorkflowDataUpdater) => {

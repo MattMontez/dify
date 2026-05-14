@@ -1,6 +1,5 @@
-import type { ReactFlowInstance } from '@xyflow/react'
 import type { RefObject } from 'react'
-import type { Edge, Node } from '../../types'
+import type { ReactFlowInstance } from 'reactflow'
 import type { CursorPosition } from '../types/collaboration'
 
 const CURSOR_MIN_MOVE_DISTANCE = 10
@@ -8,7 +7,7 @@ const CURSOR_THROTTLE_MS = 300
 
 export class CursorService {
   private containerRef: RefObject<HTMLElement> | null = null
-  private reactFlowInstance: ReactFlowInstance<Node, Edge> | null = null
+  private reactFlowInstance: ReactFlowInstance | null = null
   private isTracking = false
   private onCursorUpdate: ((cursors: Record<string, CursorPosition>) => void) | null = null
   private onEmitPosition: ((position: CursorPosition) => void) | null = null
@@ -18,7 +17,7 @@ export class CursorService {
   startTracking(
     containerRef: RefObject<HTMLElement>,
     onEmitPosition: (position: CursorPosition) => void,
-    reactFlowInstance?: ReactFlowInstance<Node, Edge>,
+    reactFlowInstance?: ReactFlowInstance,
   ): void {
     if (this.isTracking)
       this.stopTracking()

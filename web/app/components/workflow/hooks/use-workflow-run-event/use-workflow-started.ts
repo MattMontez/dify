@@ -1,12 +1,12 @@
 import type { WorkflowStartedResponse } from '@/types/workflow'
 import { produce } from 'immer'
 import { useCallback } from 'react'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useStoreApi } from 'reactflow'
 import { useWorkflowStore } from '@/app/components/workflow/store'
 import { WorkflowRunningStatus } from '@/app/components/workflow/types'
 
 export const useWorkflowStarted = () => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
 
   const handleWorkflowStarted = useCallback((params: WorkflowStartedResponse) => {
@@ -17,7 +17,7 @@ export const useWorkflowStarted = () => {
       setIterParallelLogMap,
     } = workflowStore.getState()
     const {
-      nodes,
+      getNodes,
       setNodes,
       edges,
       setEdges,
@@ -41,6 +41,7 @@ export const useWorkflowStarted = () => {
       }
       draft.resultText = ''
     }))
+    const nodes = getNodes()
     const newNodes = produce(nodes, (draft) => {
       draft.forEach((node) => {
         node.data._waitingRun = true

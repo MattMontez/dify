@@ -10,7 +10,7 @@ let mockUserId = 'user-1'
 const mockFlowToScreenPosition = vi.fn((position: Position) => position)
 const mockScreenToFlowPosition = vi.fn((position: Position) => position)
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useReactFlow: () => ({
     flowToScreenPosition: mockFlowToScreenPosition,
     screenToFlowPosition: mockScreenToFlowPosition,

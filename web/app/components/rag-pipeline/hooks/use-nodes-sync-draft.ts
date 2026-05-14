@@ -1,32 +1,33 @@
 import type { SyncDraftCallback } from '@/app/components/workflow/hooks-store'
 import { produce } from 'immer'
 import { useCallback } from 'react'
+import { useStoreApi } from 'reactflow'
 import { useSerialAsyncCallback } from '@/app/components/workflow/hooks/use-serial-async-callback'
 import {
   useNodesReadOnly,
 } from '@/app/components/workflow/hooks/use-workflow'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import {
   useWorkflowStore,
 } from '@/app/components/workflow/store'
 import { API_PREFIX } from '@/config'
-import { parseResponseError, postWithKeepalive } from '@/service/fetch'
+import { postWithKeepalive } from '@/service/fetch'
 import { syncWorkflowDraft } from '@/service/workflow'
 import { usePipelineRefreshDraft } from '.'
 
 export const useNodesSyncDraft = () => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const workflowStore = useWorkflowStore()
   const { getNodesReadOnly } = useNodesReadOnly()
   const { handleRefreshWorkflowDraft } = usePipelineRefreshDraft()
 
   const getPostParams = useCallback(() => {
     const {
-      nodes,
+      getNodes,
       edges,
       transform,
     } = store.getState()
-    const validNodes = nodes.filter(node => !node.data._isTempNode)
+    const nodesOriginal = getNodes()
+    const nodes = nodesOriginal.filter(node => !node.data._isTempNode)
     const [x, y, zoom] = transform
     const {
       pipelineId,
@@ -35,8 +36,8 @@ export const useNodesSyncDraft = () => {
       ragPipelineVariables,
     } = workflowStore.getState()
 
-    if (pipelineId && !!validNodes.length) {
-      const producedNodes = produce(validNodes, (draft) => {
+    if (pipelineId && !!nodes.length) {
+      const producedNodes = produce(nodes, (draft) => {
         draft.forEach((node) => {
           Object.keys(node.data).forEach((key) => {
             if (key.startsWith('_'))
@@ -46,10 +47,9 @@ export const useNodesSyncDraft = () => {
       })
       const producedEdges = produce(edges, (draft) => {
         draft.forEach((edge) => {
-          const data = edge.data as typeof edge.data & Record<string, unknown>
-          Object.keys(data).forEach((key) => {
+          Object.keys(edge.data).forEach((key) => {
             if (key.startsWith('_'))
-              delete data[key]
+              delete edge.data[key]
           })
         })
       })
@@ -102,9 +102,12 @@ export const useNodesSyncDraft = () => {
         callback?.onSuccess?.()
       }
       catch (error: any) {
-        const err = await parseResponseError(error)
-        if (err?.code === 'draft_workflow_not_sync' && !notRefreshWhenSyncError)
-          handleRefreshWorkflowDraft()
+        if (error && error.json && !error.bodyUsed) {
+          error.json().then((err: any) => {
+            if (err.code === 'draft_workflow_not_sync' && !notRefreshWhenSyncError)
+              handleRefreshWorkflowDraft()
+          })
+        }
         callback?.onError?.()
       }
       finally {

@@ -1,11 +1,10 @@
 import type { Shape } from './store'
-import { useStore,
-} from '@xyflow/react'
 import {
   createContext,
   useEffect,
   useRef,
 } from 'react'
+import { useStore } from 'reactflow'
 import {
   createHooksStore,
 } from './store'
@@ -17,12 +16,13 @@ type HooksStoreContextProviderProps = Partial<Shape> & {
 }
 export const HooksStoreContextProvider = ({ children, ...restProps }: HooksStoreContextProviderProps) => {
   const storeRef = useRef<HooksStore | undefined>(undefined)
-  const panZoom = useStore(s => s.panZoom)
+  const d3Selection = useStore(s => s.d3Selection)
+  const d3Zoom = useStore(s => s.d3Zoom)
 
   useEffect(() => {
-    if (storeRef.current && panZoom)
+    if (storeRef.current && d3Selection && d3Zoom)
       storeRef.current.getState().refreshAll(restProps)
-  }, [panZoom])
+  }, [d3Selection, d3Zoom])
 
   if (!storeRef.current)
     storeRef.current = createHooksStore(restProps)

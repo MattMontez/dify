@@ -39,9 +39,6 @@ const mocks = vi.hoisted(() => {
   const reactFlowStoreState = {
     edges: [{ id: 'edge-1' }],
     getNodes: vi.fn(),
-    get nodes() {
-      return this.getNodes()
-    },
     setNodes: vi.fn(),
   }
   const workflowStoreState: WorkflowStoreState = {}
@@ -106,7 +103,7 @@ const mocks = vi.hoisted(() => {
   }
 })
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => mocks.reactFlowStoreState,
   }),

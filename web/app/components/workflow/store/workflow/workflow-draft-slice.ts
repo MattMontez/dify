@@ -1,4 +1,4 @@
-import type { Viewport } from '@xyflow/react'
+import type { Viewport } from 'reactflow'
 import type { StateCreator } from 'zustand'
 import type {
   Edge,

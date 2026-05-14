@@ -1,4 +1,4 @@
-import type { NodeProps } from '@/app/components/workflow/types'
+import type { NodeProps } from 'reactflow'
 import BaseNode from './base'
 import { NodeComponentMap } from './constants'
 

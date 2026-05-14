@@ -14,7 +14,7 @@ import { useChecklist, useWorkflowRunValidation } from '../use-checklist'
 // Mocks
 // ---------------------------------------------------------------------------
 
-vi.mock('@xyflow/react', async () => {
+vi.mock('reactflow', async () => {
   const base = (await import('../../__tests__/reactflow-mock-state')).createReactFlowModuleMock()
   return {
     ...base,

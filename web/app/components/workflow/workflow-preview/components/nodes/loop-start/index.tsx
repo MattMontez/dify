@@ -1,4 +1,4 @@
-import type { NodeProps } from '@/app/components/workflow/types'
+import type { NodeProps } from 'reactflow'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@langgenius/dify-ui/tooltip'
 import { RiHome5Fill } from '@remixicon/react'
 import { memo } from 'react'

@@ -1,5 +1,4 @@
 'use client'
-
 import type { OnlineUser } from '../collaboration/types/collaboration'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { AvatarFallback, AvatarImage, AvatarRoot } from '@langgenius/dify-ui/avatar'
@@ -12,7 +11,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@langgenius/dify-ui/tooltip'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWorkflowReactFlow } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useReactFlow } from 'reactflow'
 import { useAppContext } from '@/context/app-context'
 import { getAvatar } from '@/service/common'
 import { useCollaboration } from '../collaboration/hooks/use-collaboration'
@@ -56,7 +55,7 @@ const OnlineUsers = () => {
   const appId = useStore(s => s.appId)
   const { onlineUsers, cursors, isEnabled: isCollaborationEnabled } = useCollaboration(appId as string)
   const { userProfile } = useAppContext()
-  const reactFlow = useWorkflowReactFlow()
+  const reactFlow = useReactFlow()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const avatarUrls = useAvatarUrls(onlineUsers || [])
 

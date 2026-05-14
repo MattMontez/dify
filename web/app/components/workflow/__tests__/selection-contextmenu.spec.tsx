@@ -1,7 +1,7 @@
 import type { Edge, Node } from '../types'
 import { act, fireEvent, screen, waitFor } from '@testing-library/react'
 import { useEffect } from 'react'
-import { useWorkflowFlowNodes } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useNodes } from 'reactflow'
 import SelectionContextmenu from '../selection-contextmenu'
 import { useWorkflowHistoryStore } from '../workflow-history-store'
 import { createEdge, createNode } from './fixtures'
@@ -69,7 +69,7 @@ vi.mock('../hooks', async () => {
 })
 
 const RuntimeProbe = () => {
-  latestNodes = useWorkflowFlowNodes() as Node[]
+  latestNodes = useNodes() as Node[]
   const { store } = useWorkflowHistoryStore()
 
   useEffect(() => {

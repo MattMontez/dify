@@ -8,7 +8,7 @@ import { PipelineInputVarType } from '@/models/pipeline'
 import InputFieldPanel from '../index'
 
 let mockNodesData: Node<DataSourceNodeType>[] = []
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useNodes: () => mockNodesData,
 }))
 

@@ -1,4 +1,4 @@
-import type { ReactFlowInstance } from '@xyflow/react'
+import type { ReactFlowInstance } from 'reactflow'
 import { CursorService } from '../cursor-service'
 
 describe('CursorService', () => {
@@ -37,7 +37,7 @@ describe('CursorService', () => {
       getZoom: () => 2,
     } as unknown as ReactFlowInstance
 
-    service.startTracking({ current: container }, onEmit, reactFlow as never)
+    service.startTracking({ current: container }, onEmit, reactFlow)
 
     container.dispatchEvent(new MouseEvent('mousemove', { clientX: 30, clientY: 50 }))
     expect(onEmit).toHaveBeenCalledTimes(1)

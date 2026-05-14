@@ -1,13 +1,13 @@
 import type { ValueSelector, Var } from '../../types'
 import type { AssignerNodeOperation, AssignerNodeType } from './types'
 import { useCallback, useMemo } from 'react'
+import { useStoreApi } from 'reactflow'
 import {
   useIsChatMode,
   useNodesReadOnly,
   useWorkflow,
   useWorkflowVariables,
 } from '@/app/components/workflow/hooks'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
 import useNodeCrud from '@/app/components/workflow/nodes/_base/hooks/use-node-crud'
 import { useGetAvailableVars } from './hooks'
 import { WriteMode, writeModeTypesNum } from './types'
@@ -27,15 +27,15 @@ const useConfig = (id: string, rawPayload: AssignerNodeType) => {
   const isChatMode = useIsChatMode()
   const getAvailableVars = useGetAvailableVars()
 
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
   const { getBeforeNodesInSameBranchIncludeParent } = useWorkflow()
 
   const {
-    nodes,
+    getNodes,
   } = store.getState()
-  const currentNode = nodes.find(n => n.id === id)
+  const currentNode = getNodes().find(n => n.id === id)
   const isInIteration = payload.isInIteration
-  const iterationNode = isInIteration ? nodes.find(n => n.id === currentNode!.parentId) : null
+  const iterationNode = isInIteration ? getNodes().find(n => n.id === currentNode!.parentId) : null
   const availableNodes = useMemo(() => {
     return getBeforeNodesInSameBranchIncludeParent(id)
   }, [getBeforeNodesInSameBranchIncludeParent, id])

@@ -1,9 +1,9 @@
 import { produce } from 'immer'
 import { useCallback } from 'react'
-import { useWorkflowStoreApi } from '@/app/components/workflow/hooks/use-workflow-reactflow'
+import { useStoreApi } from 'reactflow'
 
 export const useEdgesInteractionsWithoutSync = () => {
-  const store = useWorkflowStoreApi()
+  const store = useStoreApi()
 
   const handleEdgeCancelRunningStatus = useCallback(() => {
     const {

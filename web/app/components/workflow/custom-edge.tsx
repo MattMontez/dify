@@ -1,17 +1,9 @@
-import type { EdgeProps } from '@xyflow/react'
+import type { EdgeProps } from 'reactflow'
 import type {
   Edge,
   OnSelectBlock,
 } from './types'
-import {
-  cn,
-} from '@langgenius/dify-ui/cn'
-import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  getBezierPath,
-  Position,
-} from '@xyflow/react'
+import { cn } from '@langgenius/dify-ui/cn'
 import { intersection } from 'es-toolkit/array'
 import {
   memo,
@@ -19,6 +11,12 @@ import {
   useMemo,
   useState,
 } from 'react'
+import {
+  BaseEdge,
+  EdgeLabelRenderer,
+  getBezierPath,
+  Position,
+} from 'reactflow'
 import { ErrorHandleTypeEnum } from '@/app/components/workflow/nodes/_base/components/error-handle/types'
 import BlockSelector from './block-selector'
 import { ITERATION_CHILDREN_Z_INDEX, LOOP_CHILDREN_Z_INDEX } from './constants'
@@ -42,7 +40,7 @@ const CustomEdge = ({
   targetX,
   targetY,
   selected,
-}: EdgeProps<Edge>) => {
+}: EdgeProps) => {
   const [
     edgePath,
     labelX,

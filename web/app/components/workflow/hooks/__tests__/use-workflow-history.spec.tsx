@@ -13,13 +13,13 @@ vi.mock('es-toolkit/compat', () => ({
   debounce: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
 }))
 
-vi.mock('@xyflow/react', async () => {
-  const actual = await vi.importActual<typeof import('@xyflow/react')>('@xyflow/react')
+vi.mock('reactflow', async () => {
+  const actual = await vi.importActual<typeof import('reactflow')>('reactflow')
   return {
     ...actual,
     useStoreApi: () => ({
       getState: () => ({
-        nodes: reactFlowState.nodes,
+        getNodes: () => reactFlowState.nodes,
         edges: reactFlowState.edges,
       }),
     }),

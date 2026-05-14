@@ -1,15 +1,12 @@
 import type { ListFilterNodeType } from '../types'
-import {
-  render,
-  screen,
-} from '@testing-library/react'
-import { useNodes } from '@xyflow/react'
+import { render, screen } from '@testing-library/react'
+import { useNodes } from 'reactflow'
 import { BlockEnum, VarType } from '@/app/components/workflow/types'
 import { isSystemVar } from '../../_base/components/variable/utils'
 import Node from '../node'
 import { OrderBy } from '../types'
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useNodes: vi.fn(),
 }))
 

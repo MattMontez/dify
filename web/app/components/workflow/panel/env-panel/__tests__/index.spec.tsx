@@ -46,10 +46,10 @@ vi.mock('@/app/components/workflow/hooks/use-nodes-sync-draft', () => ({
   }),
 }))
 
-vi.mock('@xyflow/react', () => ({
+vi.mock('reactflow', () => ({
   useStoreApi: () => ({
     getState: () => ({
-      nodes: mockGetNodes(),
+      getNodes: mockGetNodes,
       setNodes: mockSetNodes,
     }),
   }),
