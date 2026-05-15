@@ -11713,6 +11713,7 @@ Request payload for bulk downloading documents as a zip archive.
 | code | string |  | Yes |
 | email | string |  | Yes |
 | language |  |  | No |
+| timezone |  |  | No |
 | token | string |  | Yes |
 
 #### EmailPayload
@@ -11726,8 +11727,10 @@ Request payload for bulk downloading documents as a zip archive.
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
+| language |  |  | No |
 | new_password | string |  | Yes |
 | password_confirm | string |  | Yes |
+| timezone |  |  | No |
 | token | string |  | Yes |
 
 #### EmailRegisterSendPayload
