@@ -24,7 +24,7 @@ def _end_user() -> SimpleNamespace:
 # RemoteFileInfoApi
 # ---------------------------------------------------------------------------
 class TestRemoteFileInfoApi:
-    @patch("controllers.web.remote_files.ssrf_proxy")
+    @patch("controllers.web.remote_files.remote_fetcher")
     def test_head_success(self, mock_proxy: MagicMock, app: Flask) -> None:
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -37,7 +37,7 @@ class TestRemoteFileInfoApi:
         assert result["file_type"] == "application/pdf"
         assert result["file_length"] == 1024
 
-    @patch("controllers.web.remote_files.ssrf_proxy")
+    @patch("controllers.web.remote_files.remote_fetcher")
     def test_fallback_to_get(self, mock_proxy: MagicMock, app: Flask) -> None:
         head_resp = MagicMock()
         head_resp.status_code = 405  # Method not allowed
@@ -62,7 +62,7 @@ class TestRemoteFileUploadApi:
     @patch("controllers.web.remote_files.file_helpers.get_signed_file_url", return_value="https://signed-url")
     @patch("controllers.web.remote_files.FileService")
     @patch("controllers.web.remote_files.helpers.guess_file_info_from_response")
-    @patch("controllers.web.remote_files.ssrf_proxy")
+    @patch("controllers.web.remote_files.remote_fetcher")
     @patch("controllers.web.remote_files.web_ns")
     @patch("controllers.web.remote_files.db")
     def test_upload_success(
@@ -112,7 +112,7 @@ class TestRemoteFileUploadApi:
 
     @patch("controllers.web.remote_files.FileService.is_file_size_within_limit", return_value=False)
     @patch("controllers.web.remote_files.helpers.guess_file_info_from_response")
-    @patch("controllers.web.remote_files.ssrf_proxy")
+    @patch("controllers.web.remote_files.remote_fetcher")
     @patch("controllers.web.remote_files.web_ns")
     def test_file_too_large(
         self,
@@ -134,7 +134,7 @@ class TestRemoteFileUploadApi:
             with pytest.raises(FileTooLargeError):
                 RemoteFileUploadApi().post(_app_model(), _end_user())
 
-    @patch("controllers.web.remote_files.ssrf_proxy")
+    @patch("controllers.web.remote_files.remote_fetcher")
     @patch("controllers.web.remote_files.web_ns")
     def test_fetch_failure_raises(self, mock_ns: MagicMock, mock_proxy: MagicMock, app: Flask) -> None:
         import httpx
