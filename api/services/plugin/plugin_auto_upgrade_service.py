@@ -244,12 +244,13 @@ class PluginAutoUpgradeService:
         )
 
     @staticmethod
-    def get_strategy(
-        tenant_id: str,
-        category: PluginCategory,
-    ) -> TenantPluginAutoUpgradeStrategy | None:
+    def get_strategy(tenant_id: str) -> TenantPluginAutoUpgradeStrategy | None:
         with session_factory.create_session() as session:
-            return PluginAutoUpgradeService._get_strategy(session, tenant_id, category)
+            return session.scalar(
+                select(TenantPluginAutoUpgradeStrategy)
+                .where(TenantPluginAutoUpgradeStrategy.tenant_id == tenant_id)
+                .limit(1)
+            )
 
     @staticmethod
     def get_strategies(tenant_id: str) -> list[TenantPluginAutoUpgradeStrategy]:
