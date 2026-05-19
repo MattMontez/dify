@@ -837,3 +837,42 @@ class PluginReadmeApi(Resource):
         return jsonable_encoder(
             {"readme": PluginService.fetch_plugin_readme(tenant_id, args.plugin_unique_identifier, args.language)}
         )
+
+
+@console_ns.route("/workspaces/current/plugin/preferences/fetch")
+class PluginFetchPreferencesApi(Resource):
+    @setup_required
+    @login_required
+    @account_initialization_required
+    def get(self):
+        _, tenant_id = current_account_with_tenant()
+
+        permission = PluginPermissionService.get_permission(tenant_id)
+        permission_dict = {
+            "install_permission": TenantPluginPermission.InstallPermission.EVERYONE,
+            "debug_permission": TenantPluginPermission.DebugPermission.EVERYONE,
+        }
+
+        if permission:
+            permission_dict["install_permission"] = permission.install_permission
+            permission_dict["debug_permission"] = permission.debug_permission
+
+        auto_upgrade = PluginAutoUpgradeService.get_strategy(tenant_id)
+        auto_upgrade_dict = {
+            "strategy_setting": TenantPluginAutoUpgradeStrategy.StrategySetting.DISABLED,
+            "upgrade_time_of_day": 0,
+            "upgrade_mode": TenantPluginAutoUpgradeStrategy.UpgradeMode.EXCLUDE,
+            "exclude_plugins": [],
+            "include_plugins": [],
+        }
+
+        if auto_upgrade:
+            auto_upgrade_dict = {
+                "strategy_setting": auto_upgrade.strategy_setting,
+                "upgrade_time_of_day": auto_upgrade.upgrade_time_of_day,
+                "upgrade_mode": auto_upgrade.upgrade_mode,
+                "exclude_plugins": auto_upgrade.exclude_plugins,
+                "include_plugins": auto_upgrade.include_plugins,
+            }
+
+        return jsonable_encoder({"permission": permission_dict, "auto_upgrade": auto_upgrade_dict})
