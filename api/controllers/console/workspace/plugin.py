@@ -17,7 +17,7 @@ from core.plugin.impl.exc import PluginDaemonClientSideError
 from graphon.model_runtime.utils.encoders import jsonable_encoder
 from libs.login import current_account_with_tenant, login_required
 from models.account import TenantPluginAutoUpgradeStrategy, TenantPluginPermission
-from services.plugin.plugin_auto_upgrade_service import PluginAutoUpgradeService
+from services.plugin.plugin_auto_upgrade_service import PluginAutoUpgradeService, PluginCategory
 from services.plugin.plugin_parameter_service import PluginParameterService
 from services.plugin.plugin_permission_service import PluginPermissionService
 from services.plugin.plugin_service import PluginService
@@ -857,7 +857,7 @@ class PluginFetchPreferencesApi(Resource):
             permission_dict["install_permission"] = permission.install_permission
             permission_dict["debug_permission"] = permission.debug_permission
 
-        auto_upgrade = PluginAutoUpgradeService.get_strategy(tenant_id)
+        auto_upgrade = PluginAutoUpgradeService.get_strategy(tenant_id, PluginCategory.MODEL)
         auto_upgrade_dict = {
             "strategy_setting": TenantPluginAutoUpgradeStrategy.StrategySetting.DISABLED,
             "upgrade_time_of_day": 0,
