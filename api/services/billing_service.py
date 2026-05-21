@@ -116,7 +116,7 @@ class BillingInfo(TypedDict):
     subscription: _BillingSubscription
     members: _BillingQuota
     apps: _BillingQuota
-    vector_space: NotRequired[_VectorSpaceQuota]
+    vector_space: NotRequired[_VectorSpaceQuota | None]
     knowledge_rate_limit: _KnowledgeRateLimit
     documents_upload_quota: _BillingQuota
     annotation_quota_limit: _BillingQuota

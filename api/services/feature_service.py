@@ -381,13 +381,14 @@ class FeatureService:
 
     @classmethod
     def _fulfill_vector_space_from_billing_info(cls, vector_space: LimitationModel, billing_info: BillingInfo):
-        if "vector_space" not in billing_info:
+        billing_vector_space = billing_info.get("vector_space")
+        if not billing_vector_space:
             return
 
         # NOTE: billing API returns vector_space.size as float (e.g. 0.0),
         # but feature API keeps LimitationModel.size as int for compatibility.
-        vector_space.size = int(billing_info["vector_space"]["size"])
-        vector_space.limit = billing_info["vector_space"]["limit"]
+        vector_space.size = int(billing_vector_space["size"])
+        vector_space.limit = billing_vector_space["limit"]
 
     @classmethod
     def _fulfill_params_from_enterprise(cls, features: SystemFeatureModel, is_authenticated: bool = False):
