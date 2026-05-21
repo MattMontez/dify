@@ -80,35 +80,6 @@ class _BillingSubscription(TypedDict):
     education: bool
 
 
-class BillingInfo(TypedDict):
-    """Response of /subscription/info.
-
-    NOTE (hj24):
-    - Fields not listed here (e.g. trigger_event, api_rate_limit) are stripped by TypeAdapter.validate_python()
-    - To ensure the precision, billing may convert fields like int as str, be careful when use TypeAdapter:
-        1. validate_python in non-strict mode will coerce it to the expected type
-        2. In strict mode, it will raise ValidationError
-        3. To preserve compatibility, always keep non-strict mode here and avoid strict mode
-    """
-
-    enabled: bool
-    subscription: _BillingSubscription
-    members: _BillingQuota
-    apps: _BillingQuota
-    vector_space: _VectorSpaceQuota
-    knowledge_rate_limit: _KnowledgeRateLimit
-    documents_upload_quota: _BillingQuota
-    annotation_quota_limit: _BillingQuota
-    docs_processing: str
-    can_replace_logo: bool
-    model_load_balancing_enabled: bool
-    knowledge_pipeline_publish_enabled: bool
-    next_credit_reset_date: NotRequired[int]
-
-
-_billing_info_adapter = TypeAdapter(BillingInfo)
-
-
 class _TenantFeatureQuota(TypedDict):
     usage: int
     limit: int
@@ -128,31 +99,6 @@ class TenantFeatureQuotaInfo(TypedDict):
 
 
 _tenant_feature_quota_info_adapter = TypeAdapter(TenantFeatureQuotaInfo)
-
-
-class _BillingQuota(TypedDict):
-    size: int
-    limit: int
-
-
-class _VectorSpaceQuota(TypedDict):
-    size: float
-    limit: int
-
-
-class _KnowledgeRateLimit(TypedDict):
-    # NOTE (hj24):
-    # 1. Return for sandbox users but is null for other plans, it's defined but never used.
-    # 2. Keep it for compatibility for now, can be deprecated in future versions.
-    size: NotRequired[int]
-    # NOTE END
-    limit: int
-
-
-class _BillingSubscription(TypedDict):
-    plan: str
-    interval: str
-    education: bool
 
 
 class BillingInfo(TypedDict):
