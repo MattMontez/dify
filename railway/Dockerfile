@@ -8,10 +8,13 @@ RUN apt-get update \
 
 COPY supervisord.conf /etc/supervisor/conf.d/dify.conf
 COPY start-runtime.sh /usr/local/bin/start-runtime.sh
+COPY patch-dify.py /tmp/patch-dify.py
 
 RUN chmod +x /usr/local/bin/start-runtime.sh \
   && mkdir -p /app/api/storage /var/lib/redis /var/log/supervisor \
   && chown -R dify:dify /app/api/storage /var/lib/redis /var/log/supervisor
+
+RUN python /tmp/patch-dify.py && rm /tmp/patch-dify.py
 
 USER dify
 
