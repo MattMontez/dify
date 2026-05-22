@@ -1,0 +1,9 @@
+.claude/
+.context/
+.qoder/
+.vercel/
+e2e/
+docs/
+images/
+node_modules/
+web/node_modules/
