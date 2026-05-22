@@ -6,8 +6,8 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends redis-server supervisor \
   && rm -rf /var/lib/apt/lists/*
 
-COPY railway/supervisord.conf /etc/supervisor/conf.d/dify.conf
-COPY railway/start-runtime.sh /usr/local/bin/start-runtime.sh
+COPY supervisord.conf /etc/supervisor/conf.d/dify.conf
+COPY start-runtime.sh /usr/local/bin/start-runtime.sh
 
 RUN chmod +x /usr/local/bin/start-runtime.sh \
   && mkdir -p /app/api/storage /var/lib/redis /var/log/supervisor \
