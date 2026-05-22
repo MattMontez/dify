@@ -47,8 +47,18 @@ def upgrade():
     conn = op.get_bind()
     
     if _is_pg(conn):
+        has_uuidv7 = conn.execute(sa.text("""
+            SELECT EXISTS (
+                SELECT 1
+                FROM pg_proc
+                WHERE proname = 'uuidv7'
+                  AND pronargs = 0
+            )
+        """)).scalar()
+
         # PostgreSQL: Create uuidv7 functions
-        op.execute(sa.text(r"""
+        if not has_uuidv7:
+            op.execute(sa.text(r"""
 /* Main function to generate a uuidv7 value with millisecond precision */
 CREATE FUNCTION uuidv7() RETURNS uuid
 AS
@@ -95,7 +105,7 @@ def downgrade():
     conn = op.get_bind()
     
     if _is_pg(conn):
-        op.execute(sa.text("DROP FUNCTION uuidv7"))
-        op.execute(sa.text("DROP FUNCTION uuidv7_boundary"))
+        op.execute(sa.text("DROP FUNCTION IF EXISTS public.uuidv7()"))
+        op.execute(sa.text("DROP FUNCTION IF EXISTS public.uuidv7_boundary(timestamptz)"))
     else:
         pass
