@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export LANG="${LANG:-C.UTF-8}"
-export LC_ALL="${LC_ALL:-C.UTF-8}"
+export LANG="C.UTF-8"
+export LC_ALL="C.UTF-8"
 export PYTHONIOENCODING="${PYTHONIOENCODING:-utf-8}"
 export FLASK_APP="${FLASK_APP:-app.py}"
 export DIFY_BIND_ADDRESS="${DIFY_BIND_ADDRESS:-0.0.0.0}"
@@ -17,6 +17,8 @@ export CELERY_PREFETCH_MULTIPLIER="${CELERY_PREFETCH_MULTIPLIER:-1}"
 export MAX_TASKS_PER_CHILD="${MAX_TASKS_PER_CHILD:-50}"
 export LOG_LEVEL="${LOG_LEVEL:-INFO}"
 export MIGRATION_ENABLED="${MIGRATION_ENABLED:-true}"
+
+redis-server --bind 127.0.0.1 --port 6379 --save 60 1 --dir /var/lib/redis --daemonize yes
 
 if [[ "${MIGRATION_ENABLED}" == "true" ]]; then
   echo "Running Dify database migrations"
